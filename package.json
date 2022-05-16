@@ -12,10 +12,13 @@
     "@testing-library/user-event": "^13.2.1",
     "@usedapp/core": "^1.0.2",
     "bootstrap": "^5.1.3",
+    "firebase": "^9.8.1",
     "ganache": "^7.1.0",
     "react": "^18.1.0",
     "react-bootstrap": "^2.3.1",
     "react-dom": "^18.1.0",
+    "react-firebase-hooks": "^5.0.3",
+    "react-phone-number-input": "^3.1.52",
     "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.2",
     "truffle": "^5.5.14",
@@ -26,7 +29,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "ganache": "ganache --wallet.seed myCustomSeed"
   },
   "eslintConfig": {
     "extends": [
