@@ -68,10 +68,12 @@ export const vote = async (voterIndex, candidateID) => {
 
     }
     else{
-        election.methods.vote(pollID, candidateID)
+        election.methods.vote(pollID, candidateID).call()
+        window.alert(
+            "Vote has successfully been recorded, you will be redirected to the home page."
+        )
     }
     
-    election.methods.vote(pollID, candidateID).call()
 }
 
 // export const 

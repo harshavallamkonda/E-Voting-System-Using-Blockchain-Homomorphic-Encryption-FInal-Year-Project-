@@ -9,8 +9,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { connectDefault, loadVoterAccount } from './web3/Web3'
-import { auth } from './Firebase'
+import { connectDefault, loadVoterAccount } from '../web3/Web3'
+import { auth } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 
