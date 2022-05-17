@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './components/pages/Home';
 import Contact from './components/Footer';
-import VoterLogin from './components/VoterLogin';
-import AdminLogin from './components/AdminLogin';
+import VoterLogin from './authentication/VoterLogin';
+import AdminLogin from './authentication/AdminLogin';
 
 function App() {
   return (
