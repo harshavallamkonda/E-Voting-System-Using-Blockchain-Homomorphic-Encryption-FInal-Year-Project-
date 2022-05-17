@@ -2,10 +2,13 @@ import React, { useState, useEffect} from 'react';
 import { Col, Container, Row, Button } from 'react-bootstrap';
 import { vote } from '../web3/Web3'
 import Home from './Home'
+import { useNavigate } from 'react-router-dom'
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
 
 function Voting() {
 
+
+    let navigate = useNavigate()
     
     useEffect( () => {
     })
@@ -30,7 +33,7 @@ function Voting() {
 
         await vote(voterIndex, candidateID)
         
-        
+        navigate('/')
 
         
     }
