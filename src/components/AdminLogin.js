@@ -58,12 +58,11 @@ export default function AdminLogin() {
             <TextField
               margin="normal"
               required
-              isEmail
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              id="employeeid"
+              label="Employee ID"
+              name="employeeid"
+              autoComplete="employeeid"
               autoFocus
             />
             <TextField
