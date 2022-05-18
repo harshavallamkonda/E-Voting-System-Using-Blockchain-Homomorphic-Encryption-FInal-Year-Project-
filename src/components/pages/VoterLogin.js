@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-// import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -138,29 +138,58 @@ export default function VoterLogin() {
               margin="normal"
               required
               fullWidth
-              id="voterid"
               label="Voter ID"
               name="voterid"
               autoComplete="voterid"
               autoFocus
             />
-            <div style={{ "marginTop": "200px" }}>
-            <center>
-                <div style={{ display: !show ? "block" : "none" }}>
-                    <input value={phoneNumber} onChange={(e) => { 
-                       setphoneNumber(e.target.value) }}
-                        placeholder="phone number" />
-                    <br /><br />
-                    <div id="recaptcha-container"></div>
-                    <button onClick={sendOTP}>Send OTP</button>
-                </div>
-                <div style={{ display: show ? "block" : "none" }}>
-                    <input type="text" placeholder={"Enter your OTP"}
-                        onChange={(e) => { setOTP(e.target.value) }}></input>
-                    <br /><br />
-                    <button onClick={handleSubmit}>Verify</button>
-                </div>
-            </center>
+            <div style={{ display: !show ? "block" : "none" }}>
+                <TextField 
+                margin="normal"
+                required
+                fullWidth
+                label="Phone Number with Country Code"
+                name="phoneNumber"
+                autoComplete="voterid"
+                autoFocus
+                value={phoneNumber} 
+                inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
+                onChange={(e) => { 
+                    setphoneNumber(e.target.value) 
+                  }
+                }
+                />
+                <br /><br />
+                <div id="recaptcha-container"></div>
+                <Button 
+                onClick={sendOTP}
+                type="submit"
+                fullWidth
+                variant="contained"
+                inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
+                sx={{ mt: 3, mb: 2 }}>
+
+                  Send OTP
+                </Button>
+            </div>
+            <div style={{ display: show ? "block" : "none" }}>
+                <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="OTP"
+                name="otp"
+                autoComplete="otp"
+                autoFocus
+                onChange={(e) => { setOTP(e.target.value) }}></TextField>
+                <br /><br />
+                <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleSubmit}>
+                  Verify
+                </Button>
             </div>
             <div>
             {/* <TextField
