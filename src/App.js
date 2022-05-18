@@ -5,7 +5,7 @@ import './App.css';
 import Home from './components/pages/Home';
 import Contact from './components/Footer';
 import VoterLogin from './components/VoterLogin';
-import AdminLogin from './components/AdminLogin;
+import AdminLogin from './components/AdminLogin';
 
 function App() {
   return (
