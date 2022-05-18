@@ -10,28 +10,28 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
-    "@usedapp/core": "^0.3.10",
+    "@usedapp/core": "^1.0.2",
     "bootstrap": "^5.1.3",
     "firebase": "^9.8.1",
     "ganache": "^7.1.0",
-    "material-ui-core": "^5.0.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.3.1",
     "react-dom": "^18.1.0",
-    "react-material-ui-form-validator": "^3.0.0",
+    "react-firebase-hooks": "^5.0.3",
+    "react-phone-number-input": "^3.1.52",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
-    "react-spinners": "^0.12.0",
-    "react-toastify": "^9.0.1",
-    "truffle": "^5.1.67",
+    "react-scripts": "4.0.2",
+    "truffle": "^5.5.14",
     "web-vitals": "^2.1.0",
-    "web3": "^1.7.3"
+    "web3": "^1.7.3",
+    "contracts": "./blockchain/build/contracts"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "ganache": "ganache --wallet.seed myCustomSeed"
   },
   "eslintConfig": {
     "extends": [
