@@ -1,7 +1,5 @@
 import Web3 from 'web3';
 import ElectionAbi from './Election.json';
-// import { useState } from 'react';
-
 
 
 export const connectDefault = async () => {
@@ -18,21 +16,19 @@ export const connectDefault = async () => {
         )
     }
 }
-
-let currentAccount = null;
 let adminAccount = null;
 let pollID = null;
 
 export const loadAdminAccount = async () => {
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
-    currentAccount = adminAccount = accounts[0];
+    adminAccount = accounts[0];
     return(adminAccount)
 }
 
 const loadContract = async () => {
     const web3 = window.web3;
-    const networkID = await web3.eith.net.getId();
+    const networkID = await web3.eth.net.getId();
     const networkData = ElectionAbi.networks[networkID];
 
     if(networkData) {
@@ -68,7 +64,9 @@ export const vote = async (voterIndex, candidateID) => {
 
     }
     else{
-        election.methods.vote(pollID, candidateID).call()
+        await election.methods.vote(pollID, candidateID).send( {from: voterAddress} ).on('transactionhash', () => {
+            console.log('Vote Success')
+        })
         window.alert(
             "Vote has successfully been recorded, you will be redirected to the home page."
         )
@@ -76,4 +74,26 @@ export const vote = async (voterIndex, candidateID) => {
     
 }
 
-// export const 
+export const addPoll = async (pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName) => {
+    const election = loadContract()
+    await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
+        window.alert(
+            "Poll has been successfully created"
+        )
+    })
+}
+
+export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
+
+    const election = loadContract()
+    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send( {from: adminAccount})
+    return winnerID
+
+}
+
+export const electionWinner = async (pollID) => {
+
+    const election = loadContract()
+    const winningParty = await election.methods.electionWinner(pollID).send({from: adminAccount})
+    return winningParty
+}
