@@ -30,78 +30,83 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function VoterLogin() {
-  
-
   const [voterName, setvoterName] = React.useState("")
   const [voterID, setvoterID] = React.useState("")
   const [phoneNumber, setphoneNumber] = React.useState("")
   const [OTP, setOTP] = React.useState()
   const [user, setUser] = React.useState([])
   const [show, setshow] = React.useState(false)
+  const [errors, setErrors] = React.useState({})
+
+  const validate = () => {
+    let temp = { ...errors }
+    temp.voterName = temp.voterName !== "" ? "" : "This field is required"
+    temp.voterID = temp.voterID !== "" ? "" : "This field is required"
+    temp.phoneNumber = temp.phoneNumber !== "" ? "" : "This field is required"
+    temp.otp = temp.otp !== "" ? "" : "This field is required"
+    setErrors({
+      ...temp
+    })
+  }
   
   React.useEffect(() => {
     connectDefault()
   },[])
 
   const sendOTP = (event) => {
-    
-    event.preventDefault()
+    validate()
+      event.preventDefault()
 
-    if (phoneNumber === "" || phoneNumber.length < 10) return;
-  
-        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
-        const appVerifier = window.recaptchaVerifier
-        signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
-            alert("code sent")
-            setshow(true);
-        })
-            .catch((err) => {
-                alert(err);
-                window.location.reload()
-            });
+      if (phoneNumber === "" || phoneNumber.length < 10) return;
+    
+          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+          const appVerifier = window.recaptchaVerifier
+          signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
+              alert("code sent")
+              setshow(true);
+          })
+          .catch((err) => {
+              alert(err);
+              window.location.reload()
+          });
   }
 
-
   const handleSubmit = (event) => {
+      console.log(voterName, voterID, phoneNumber, OTP)
+      validate()
+      event.preventDefault();
 
-    const data = new FormData(event.currentTarget);
-    setvoterName(data.get('votername'))
-    setvoterID(data.get('voterid'))
+      window.confirmationResult
+      .confirm(OTP)
+      .then((confirmationResult) => {
+        alert(confirmationResult)
+      })
+      .catch((error) => {
+        alert(error.message)
+      })
 
-    event.preventDefault();
-    window.confirmationResult
-    .confirm(OTP)
-    .then((confirmationResult) => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+            setUser(user);
+        }
+      });
+      console.log(user)
 
-      alert(confirmationResult)
-    })
-    .catch((error) => {
-      alert(error.message)
-    })
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-          setUser(user);
+      if (loadVoterAccount(
+        { voterName },
+        { voterID },
+        { phoneNumber }
+        )) 
+        {
+        alert(
+          "Voter Login Successful"
+        )
+      } 
+      else {
+        alert(
+          "Voter Login Failed"
+        )
       }
-    });
-    console.log(user)
-
-    if (loadVoterAccount(
-      { voterName },
-      { voterID },
-      { phoneNumber }
-      )) 
-      {
-      alert(
-        "Voter Login Successful"
-      )
-    } 
-    else {
-      alert(
-        "Voter Login Failed"
-      )
-    }
-
   };
 
   return (
@@ -130,8 +135,9 @@ export default function VoterLogin() {
               id="votername"
               label="Full Name as per Voter ID"
               name="votername"
-              autoComplete="votername"
-              autoFocus
+              value={voterName}
+              onChange={ (e) => {setvoterName(e.target.value) }}
+              { ...(errors.voterName && {error: true, helperText:errors.voterName})}
             />
 
             <TextField
@@ -140,8 +146,9 @@ export default function VoterLogin() {
               fullWidth
               label="Voter ID"
               name="voterid"
-              autoComplete="voterid"
-              autoFocus
+              value={voterID}
+              onChange={ (e) => {setvoterID(e.target.value) }}
+              { ...(errors.voterID && {error: true, helperText:errors.voterID})}
             />
             <div style={{ display: !show ? "block" : "none" }}>
                 <TextField 
@@ -150,14 +157,10 @@ export default function VoterLogin() {
                 fullWidth
                 label="Phone Number with Country Code"
                 name="phoneNumber"
-                autoComplete="voterid"
-                autoFocus
                 value={phoneNumber} 
                 inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
-                onChange={(e) => { 
-                    setphoneNumber(e.target.value) 
-                  }
-                }
+                onChange={(e) => { setphoneNumber(e.target.value) }}
+                { ...(errors.phoneNumber && {error:true, helperText:errors.phoneNumber})}
                 />
                 <br /><br />
                 <div id="recaptcha-container"></div>
@@ -166,9 +169,7 @@ export default function VoterLogin() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
                 sx={{ mt: 3, mb: 2 }}>
-
                   Send OTP
                 </Button>
             </div>
@@ -178,10 +179,12 @@ export default function VoterLogin() {
                 required
                 fullWidth
                 label="OTP"
-                name="otp"
-                autoComplete="otp"
-                autoFocus
-                onChange={(e) => { setOTP(e.target.value) }}></TextField>
+                name="OTP"
+                value={OTP}
+                onChange={(e) => { setOTP(e.target.value) }}
+                { ...(errors.otp && {error:true, helperText:errors.otp})}
+                />
+                
                 <br /><br />
                 <Button
                 fullWidth
