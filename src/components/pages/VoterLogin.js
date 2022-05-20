@@ -67,7 +67,7 @@ export default function VoterLogin() {
 
   const handleSubmit = (event) => {
       console.log(voterName, voterID, phoneNumber, OTP)
-      event.preventDefault();
+      //event.preventDefault();
 
       window.confirmationResult
       .confirm(OTP)
@@ -148,7 +148,9 @@ export default function VoterLogin() {
                 label="Phone Number with Country Code"
                 name="phoneNumber"
                 value={phoneNumber} 
-                inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
+                inputProps={{
+                inputmode: 'tel', 
+                pattern: '[0-9]*', }}
                 onChange={(e) => { setphoneNumber(e.target.value) }}
 
                 />
@@ -163,8 +165,7 @@ export default function VoterLogin() {
                   Send OTP
                 </Button>
             </div>
-            <Box component="form" validate sx={{ mt: 1 }}>
-            <div style={{ display: show ? "block" : "none" }}>
+            <Box component="form" validate sx={{ mt: 1 }} style={{ display: show ? "block" : "none" }}>
                 <TextField
                 margin="normal"
                 required
@@ -183,7 +184,6 @@ export default function VoterLogin() {
                 onClick={handleSubmit}>
                   Verify
                 </Button>
-            </div>
             </Box>
             <div>
             {/* <TextField
