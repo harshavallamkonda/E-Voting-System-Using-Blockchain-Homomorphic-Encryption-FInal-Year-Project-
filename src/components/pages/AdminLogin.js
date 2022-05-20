@@ -54,7 +54,7 @@ export default function AdminLogin() {
           <Typography component="h2" variant="h5">
             Admininstrator Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} validate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
