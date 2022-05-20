@@ -36,29 +36,23 @@ export default function VoterLogin() {
   const [OTP, setOTP] = React.useState()
   const [user, setUser] = React.useState([])
   const [show, setshow] = React.useState(false)
-  const [errors, setErrors] = React.useState({})
 
-  const validate = () => {
-    let temp = { ...errors }
-    temp.voterName = temp.voterName !== "" ? "" : "This field is required"
-    temp.voterID = temp.voterID !== "" ? "" : "This field is required"
-    temp.phoneNumber = temp.phoneNumber !== "" ? "" : "This field is required"
-    temp.otp = temp.otp !== "" ? "" : "This field is required"
-    setErrors({
-      ...temp
-    })
-  }
-  
   React.useEffect(() => {
     connectDefault()
   },[])
 
   const sendOTP = (event) => {
-    validate()
-      event.preventDefault()
 
-      if (phoneNumber === "" || phoneNumber.length < 10) return;
-    
+      if (voterName === "") {
+        return;
+      }
+      if (voterID === ""){
+        return;
+      }
+      if (phoneNumber === "" || phoneNumber.length < 13) {
+        return;
+      }
+      event.preventDefault()
           window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
           const appVerifier = window.recaptchaVerifier
           signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
@@ -73,7 +67,6 @@ export default function VoterLogin() {
 
   const handleSubmit = (event) => {
       console.log(voterName, voterID, phoneNumber, OTP)
-      validate()
       event.preventDefault();
 
       window.confirmationResult
@@ -127,7 +120,7 @@ export default function VoterLogin() {
           <Typography component="h2" variant="h5">
             Voter Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box component="form" validate sx={{ mt: 1 }}>
           <TextField
               margin="normal"
               required
@@ -135,9 +128,7 @@ export default function VoterLogin() {
               id="votername"
               label="Full Name as per Voter ID"
               name="votername"
-              value={voterName}
-              onChange={ (e) => {setvoterName(e.target.value) }}
-              { ...(errors.voterName && {error: true, helperText:errors.voterName})}
+              onChange= {(e) => setvoterName(e.target.value)}
             />
 
             <TextField
@@ -148,7 +139,6 @@ export default function VoterLogin() {
               name="voterid"
               value={voterID}
               onChange={ (e) => {setvoterID(e.target.value) }}
-              { ...(errors.voterID && {error: true, helperText:errors.voterID})}
             />
             <div style={{ display: !show ? "block" : "none" }}>
                 <TextField 
@@ -160,7 +150,7 @@ export default function VoterLogin() {
                 value={phoneNumber} 
                 inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
                 onChange={(e) => { setphoneNumber(e.target.value) }}
-                { ...(errors.phoneNumber && {error:true, helperText:errors.phoneNumber})}
+
                 />
                 <br /><br />
                 <div id="recaptcha-container"></div>
@@ -173,6 +163,7 @@ export default function VoterLogin() {
                   Send OTP
                 </Button>
             </div>
+            <Box component="form" validate sx={{ mt: 1 }}>
             <div style={{ display: show ? "block" : "none" }}>
                 <TextField
                 margin="normal"
@@ -182,7 +173,6 @@ export default function VoterLogin() {
                 name="OTP"
                 value={OTP}
                 onChange={(e) => { setOTP(e.target.value) }}
-                { ...(errors.otp && {error:true, helperText:errors.otp})}
                 />
                 
                 <br /><br />
@@ -194,6 +184,7 @@ export default function VoterLogin() {
                   Verify
                 </Button>
             </div>
+            </Box>
             <div>
             {/* <TextField
               margin="normal"
