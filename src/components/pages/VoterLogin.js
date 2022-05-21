@@ -63,9 +63,9 @@ export default function VoterLogin() {
       }
       
       event.preventDefault()
-          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, fire.auth);
           const appVerifier = window.recaptchaVerifier
-          signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
+          signInWithPhoneNumber(fire.auth, phoneNumber, appVerifier).then((result) => {
               alert("OTP Sent Successfully!");
               setshow(true)
           })
