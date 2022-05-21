@@ -12,7 +12,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { connectDefault, loadVoterAccount } from '../web3/Web3'
 import { auth } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-
+/* For routing to voting page after successfull verification */
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -37,10 +38,18 @@ export default function VoterLogin() {
   const [user, setUser] = React.useState([])
   const [show, setshow] = React.useState(false)
 
+  /* function for navigation */
+  let navigate = useNavigate();
+  const routeChange = () => {
+    let path = `/voting`
+    navigate(path);
+  }
+
   React.useEffect(() => {
     connectDefault()
   },[])
 
+  /* For sending OTP after verifyng */
   const sendOTP = (event) => {
 
       if (voterName === "") {
@@ -70,12 +79,15 @@ export default function VoterLogin() {
     if (OTP === ""){
       return;
     }
+    routeChange();
     event.preventDefault()
 
       window.confirmationResult
       .confirm(OTP)
       .then((confirmationResult) => {
         alert(confirmationResult)
+        /* Reroute to Voting Page unpon successful verfication of voter */
+        //routeChange();
       })
       .catch((error) => {
         alert(error.message)
@@ -165,7 +177,7 @@ export default function VoterLogin() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            align="left">
+            style={{ display: !show ? "block" : "none" }}>
               Send OTP
             </Button>
             {/* CAPTCHA to generate OTP */}
@@ -187,8 +199,7 @@ export default function VoterLogin() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit}
-              type="submit"
-              align="right">
+              type="submit">
                 Verify
               </Button>
             </Box>

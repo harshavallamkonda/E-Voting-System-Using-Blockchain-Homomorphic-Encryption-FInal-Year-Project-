@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" exact element={<Home />}/>
         <Route path="/contact" exact element={<Contact />}/>
-        <Route path="/sign-in" exact element={<VoterLogin />}/>
+        <Route path="/voter-sign-in" exact element={<VoterLogin />}/>
         <Route path='/voting' exact element={<Voting />} />
         <Route path="/admin" exact element={<AdminLogin />}/>
       </Routes>
