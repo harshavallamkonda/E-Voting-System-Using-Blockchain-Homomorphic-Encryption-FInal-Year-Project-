@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { connectDefault, loadVoterAccount } from '../web3/Web3'
-import { auth } from '../../firebase/config'
+import { fire } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 /* For routing to voting page after successfull verification */
 import { useNavigate } from 'react-router-dom';
@@ -93,7 +93,7 @@ export default function VoterLogin() {
         alert(error.message)
       })
       /*
-      auth.onAuthStateChanged((user) => {
+      fire.auth.onAuthStateChanged((user) => {
         if (user) {
             setUser(user);
         }
