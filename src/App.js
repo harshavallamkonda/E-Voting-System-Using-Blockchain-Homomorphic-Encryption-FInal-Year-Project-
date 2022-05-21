@@ -6,6 +6,7 @@ import Home from './components/pages/Home';
 import Contact from './components/Footer';
 import VoterLogin from './components/pages/VoterLogin';
 import AdminLogin from './components/pages/AdminLogin';
+import AdminOptions from './components/pages/AdminOptions';
 import Voting from './components/pages/Voting';
 
 function App() {
@@ -16,9 +17,10 @@ function App() {
       <Routes>
         <Route path="/" exact element={<Home />}/>
         <Route path="/contact" exact element={<Contact />}/>
-        <Route path="/sign-in" exact element={<VoterLogin />}/>
+        <Route path="/voter-sign-in" exact element={<VoterLogin />}/>
         <Route path='/voting' exact element={<Voting />} />
         <Route path="/admin" exact element={<AdminLogin />}/>
+        <Route path="/admin/options" exact element={<AdminOptions />}/>
       </Routes>
     </Router>
     </>

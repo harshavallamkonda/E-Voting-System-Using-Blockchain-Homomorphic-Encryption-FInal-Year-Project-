@@ -10,6 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { auth } from '../../firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -27,14 +30,87 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function AdminLogin() {
-  const handleSubmit = (event) => {
+  //const [user, setUser] = React.useState("");
+  const[email, setEmail] = React.useState("");
+  const[password, setPassword] = React.useState("");
+  const [emailError, setEmailError] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
+
+  /* function for navigation */
+  let navigate = useNavigate();
+  const routeChange = () => {
+    let path = `/admin/options`
+    navigate(path);
+  }
+
+  /*
+  const clearInputs = () => {
+    setEmail("");
+    setPassword("");
+  }
+  */
+
+  /*const clearErrors = () => {
+    setEmailError("");
+    setPasswordError("");
+  }*/
+
+  const handleLogin = (event) => {
+    //clearErrors();
+    //temporary routing to options page on button onClick
+    routeChange();
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredentials) => {
+      const user = userCredentials.user;
+      alert(user, "Login Success");
+    })
+    .catch(err => {
+      switch(err.code) {
+        case "auth/Invalid-email":
+        case "auth/Invalid-password":
+        case "auth/user-not-found":
+          setEmailError(err.message);
+          break;
+        case "auth/wrong-password":
+          setPasswordError(err.message);
+          break;
+        default:
+          break;
+      }
+
+    })
+    /*
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       employeeid: data.get('employeeid'),
       password: data.get('password'),
     });
+    */
   };
+
+  /* LOGOUT
+  const handleLogout = () => {
+    fire.auth().signOut();
+  }
+  */
+
+  /* AUTHLISTENER
+  const authListener = () => {
+    fire.auth().onAuthStateChanged((user) => {
+      if (user){
+        clearInputs();
+        setUser(user);
+      } else {
+        setUser("");
+      }
+    })
+  }
+  */
+
+  React.useEffect(() => {
+    //authListener();
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,22 +124,22 @@ export default function AdminLogin() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h2" variant="h5">
-            Admininstrator Sign in
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} validate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="employeeid"
-              label="Employee ID"
-              name="employeeid"
-              autoComplete="employeeid"
-              autoFocus
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h2" variant="h5">
+              Admininstrator Sign in
+            </Typography>
+            <Box component="form" onSubmit={handleLogin} validate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Employee ID"
+                name="employeeid"
+                type="email"
+                onChange = { (e) => setEmail(e.target.value)}
+                { ...emailError && {error: true, helperText: emailError}}
             />
             <TextField
               margin="normal"
@@ -72,8 +148,8 @@ export default function AdminLogin() {
               name="password"
               label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              { ...passwordError && {error: true, helperText: passwordError}}
             />
             
             <Button
