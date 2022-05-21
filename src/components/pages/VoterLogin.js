@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { connectDefault, loadVoterAccount } from '../web3/Web3'
-import { fire } from '../../firebase/config'
+import { auth } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 /* For routing to voting page after successfull verification */
 import { useNavigate } from 'react-router-dom';
@@ -63,9 +63,9 @@ export default function VoterLogin() {
       }
       
       event.preventDefault()
-          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, fire.auth);
+          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
           const appVerifier = window.recaptchaVerifier
-          signInWithPhoneNumber(fire.auth, phoneNumber, appVerifier).then((result) => {
+          signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
               alert("OTP Sent Successfully!");
               setshow(true)
           })
@@ -79,12 +79,13 @@ export default function VoterLogin() {
     if (OTP === ""){
       return;
     }
-    routeChange();
+    routeChange()
     event.preventDefault()
 
       window.confirmationResult
       .confirm(OTP)
       .then((confirmationResult) => {
+        routeChange()
         alert(confirmationResult)
         /* Reroute to Voting Page unpon successful verfication of voter */
         //routeChange();
@@ -93,7 +94,7 @@ export default function VoterLogin() {
         alert(error.message)
       })
       /*
-      fire.auth.onAuthStateChanged((user) => {
+      auth.onAuthStateChanged((user) => {
         if (user) {
             setUser(user);
         }
