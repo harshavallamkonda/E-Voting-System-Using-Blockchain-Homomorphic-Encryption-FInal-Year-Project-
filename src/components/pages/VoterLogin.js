@@ -33,7 +33,7 @@ export default function VoterLogin() {
   const [voterName, setvoterName] = React.useState("")
   const [voterID, setvoterID] = React.useState("")
   const [phoneNumber, setphoneNumber] = React.useState("")
-  const [OTP, setOTP] = React.useState()
+  const [OTP, setOTP] = React.useState("")
   const [user, setUser] = React.useState([])
   const [show, setshow] = React.useState(false)
 
@@ -52,22 +52,25 @@ export default function VoterLogin() {
       if (phoneNumber === "" || phoneNumber.length < 13) {
         return;
       }
+      
       event.preventDefault()
           window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
           const appVerifier = window.recaptchaVerifier
           signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
-              alert("code sent")
-              setshow(true);
+              alert("OTP Sent Successfully!");
+              setshow(true)
           })
           .catch((err) => {
-              alert(err);
+              alert(err)
               window.location.reload()
           });
   }
 
   const handleSubmit = (event) => {
-      console.log(voterName, voterID, phoneNumber, OTP)
-      //event.preventDefault();
+    if (OTP === ""){
+      return;
+    }
+    event.preventDefault()
 
       window.confirmationResult
       .confirm(OTP)
@@ -77,7 +80,7 @@ export default function VoterLogin() {
       .catch((error) => {
         alert(error.message)
       })
-
+      /*
       auth.onAuthStateChanged((user) => {
         if (user) {
             setUser(user);
@@ -100,6 +103,7 @@ export default function VoterLogin() {
           "Voter Login Failed"
         )
       }
+      */
   };
 
   return (
@@ -121,16 +125,17 @@ export default function VoterLogin() {
             Voter Sign in
           </Typography>
           <Box component="form" validate sx={{ mt: 1 }}>
-          <TextField
+            {/* Voter Name */}
+            <TextField
               margin="normal"
               required
               fullWidth
-              id="votername"
               label="Full Name as per Voter ID"
               name="votername"
+              value = {voterName}
               onChange= {(e) => setvoterName(e.target.value)}
             />
-
+            {/* Voter ID */}
             <TextField
               margin="normal"
               required
@@ -140,101 +145,56 @@ export default function VoterLogin() {
               value={voterID}
               onChange={ (e) => {setvoterID(e.target.value) }}
             />
-            <div style={{ display: !show ? "block" : "none" }}>
-                <TextField 
-                margin="normal"
-                required
-                fullWidth
-                label="Phone Number with Country Code"
-                name="phoneNumber"
-                value={phoneNumber} 
-                inputProps={{
-                inputmode: 'tel', 
-                pattern: '[0-9]*', }}
-                onChange={(e) => { setphoneNumber(e.target.value) }}
-
-                />
-                <br /><br />
-                <div id="recaptcha-container"></div>
-                <Button 
-                onClick={sendOTP}
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}>
-                  Send OTP
-                </Button>
-            </div>
-            <Box component="form" validate sx={{ mt: 1 }} style={{ display: show ? "block" : "none" }}>
-                <TextField
+            {/* Phone Number */}
+            <TextField 
+              margin="normal"
+              required
+              fullWidth
+              label="Phone Number with Country Code"
+              name="phoneNumber"
+              value = {phoneNumber}
+              inputProps={{
+              inputmode: 'tel', 
+              pattern: '[0-9]*', }}
+              onChange={(e) => { setphoneNumber(e.target.value) }}
+            />
+            {/* Generate OTP Button */}
+            <Button 
+            onClick={sendOTP}
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            align="left">
+              Send OTP
+            </Button>
+            {/* CAPTCHA to generate OTP */}
+            <div id="recaptcha-container" style={{ display: !show ? "block" : "none" }}></div>
+            <Box component="form" validate sx={{ mt: 1 }}>
+              {/* OTP */}
+              <TextField
                 margin="normal"
                 required
                 fullWidth
                 label="OTP"
                 name="OTP"
-                value={OTP}
+                value = {OTP}
                 onChange={(e) => { setOTP(e.target.value) }}
-                />
-                
-                <br /><br />
-                <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleSubmit}>
-                  Verify
-                </Button>
-            </Box>
-            <div>
-            {/* <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="phonenumber"
-              label="Phone Number"
-              name="phonenumber"
-              autoComplete="phonenumber"
-              onChange={ (e) => { setphoneNumber(e.target.value) } }
-              autoFocus
-            />
-
-            <Button
+              />
+              {/* Verify Voter Button */}
+              <Button
               fullWidth
               variant="contained"
-              onClick={ sendOTP }
               sx={{ mt: 3, mb: 2 }}
-            >
-              Send OTP
-            </Button>
-
-            <TextField
-              margin="normal"
-              style={{display : show ? "block" : "none"}}
-              required
-              fullWidth
-              name="otp"
-              label="OTP"
-              type="otp"
-              id="otp"
-              onChange={ (e) => { setOTP(e.target.value) } }
-              autoComplete="otp"
-            />
-            
-            <Button
+              onClick={handleSubmit}
               type="submit"
-              fullWidth
-              style={{ display : show ? "block" : "none" }}
-              variant="contained"
-              onSubmit={ handleSubmit }
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button> */}
-          </div>
+              align="right">
+                Verify
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
-        <div id='recaptcha-container'></div>
       </Container>
     </ThemeProvider>
     
