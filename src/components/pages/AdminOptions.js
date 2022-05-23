@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import { logout } from "../../firebase/config";
+import { auth, signOut } from "../../firebase/config";
 
 function Copyright(props) {
   return (
@@ -24,6 +24,26 @@ function Copyright(props) {
 
 function AdminOptions() {
   const navigate = useNavigate();
+
+  const routeToCreatePoll = () => {
+    let path = `/admin/create-poll`
+    navigate(path);
+  }
+  const routeToConstituencyResult = () => {
+    let path = `/admin/constituency-result`
+    navigate(path);
+  }
+  const routeToElectionResult = () => {
+    let path = `/admin/election-result`
+    navigate(path);
+  }
+
+  const handleAdminLogout = () => {
+    signOut(auth)
+    .then(() => {
+      navigate(`/admin`)
+    })
+  };
 
   const theme = createTheme();
   return (
@@ -50,8 +70,7 @@ function AdminOptions() {
               fontSize: "18px"
             }}
             sx={{ mt: 3, mb: 2 }}
-            onClick={ logout }
-            onChange={navigate("/admin")}
+            onClick={ handleAdminLogout }
             >
               Logout from Admin
             </Button>
@@ -66,7 +85,7 @@ function AdminOptions() {
               fontSize: "18px"
             }}
             sx={{ mt: 3, mb: 2 }}
-            onClick = { navigate("/admin/create-poll") }
+            onClick = { routeToCreatePoll }
             >
               Create Poll
             </Button>
@@ -81,7 +100,7 @@ function AdminOptions() {
                 fontSize: "18px"
               }}
               sx={{ mt: 3, mb: 2 }}
-              onClick = { navigate("/admin/constituency-result") }
+              onClick = { routeToConstituencyResult }
               >
                 Display Constituency's Election Result
               </Button>
@@ -96,7 +115,7 @@ function AdminOptions() {
                 fontSize: "18px"
               }}
               sx={{ mt: 3, mb: 2 }}
-              onClick = { navigate("/admin/election-result") }
+              onClick = { routeToElectionResult }
               >
                 Display Overall Election Result
               </Button>

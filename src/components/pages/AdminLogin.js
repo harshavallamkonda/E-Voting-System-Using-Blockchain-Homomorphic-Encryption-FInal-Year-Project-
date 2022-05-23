@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { auth, logInWithEmailAndPassword } from "../../firebase/config";
+import { auth, RecaptchaVerifier, signInWithEmailAndPassword } from "../../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 function Copyright(props) {
@@ -34,75 +34,31 @@ export default function AdminLogin() {
   const[email, setEmail] = React.useState("");
   const[password, setPassword] = React.useState("");
   const [user, loading] = useAuthState(auth);
+  const [show, setshow] = React.useState(false)
 
   /* function for navigation */
   let navigate = useNavigate();
 
-  /*
-  const clearInputs = () => {
-    setEmail("");
-    setPassword("");
+  const handleAdminLogin = (event) => {
+    event.preventDefault()
+          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+
+            }
+          }, auth);
+          const appVerifier = window.recaptchaVerifier
+          signInWithEmailAndPassword(auth, email, password, appVerifier)
+          .then( confirmationResult => {
+              alert("Admin logged in successfully!");
+              window.confirmationResult = confirmationResult
+              setshow(true)
+          })
+          .catch((err) => {
+              alert(err)
+              window.location.reload()
+          });
   }
-  */
-
-  /*const clearErrors = () => {
-    setEmailError("");
-    setPasswordError("");
-  }*/
-
-  /*const handleLogin = (event) => {
-    //clearErrors();
-    //temporary routing to options page on button onClick
-    routeChange();
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      alert(user, "Login Success");
-    })
-    .catch(err => {
-      switch(err.code) {
-        case "auth/Invalid-email":
-        case "auth/Invalid-password":
-        case "auth/user-not-found":
-          setEmailError(err.message);
-          break;
-        case "auth/wrong-password":
-          setPasswordError(err.message);
-          break;
-        default:
-          break;
-      }
-
-    })
-    /*
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      employeeid: data.get('employeeid'),
-      password: data.get('password'),
-    });
-    
-  };
-  */
-
-  /* LOGOUT
-  const handleLogout = () => {
-    fire.auth().signOut();
-  }
-  */
-
-  /* AUTHLISTENER
-  const authListener = () => {
-    fire.auth().onAuthStateChanged((user) => {
-      if (user){
-        clearInputs();
-        setUser(user);
-      } else {
-        setUser("");
-      }
-    })
-  }
-  */
 
   React.useEffect(() => {
     if (loading) {
@@ -137,6 +93,7 @@ export default function AdminLogin() {
                 label="Employee ID"
                 name="employeeid"
                 type="email"
+                autoComplete="email"
                 onChange = { (e) => setEmail(e.target.value)}
             />
             <TextField
@@ -146,6 +103,7 @@ export default function AdminLogin() {
               name="password"
               label="Password"
               type="password"
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
             />
             
@@ -154,10 +112,11 @@ export default function AdminLogin() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => logInWithEmailAndPassword(email, password)}
+              onClick={handleAdminLogin}
             >
               Sign In
             </Button>
+            <div id="recaptcha-container" style={{ display: !show ? "block" : "none" }}></div>
             <Grid container>
               <Grid item xs>
                 <Typography variant="body2">

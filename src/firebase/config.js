@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
+  RecaptchaVerifier,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -21,23 +22,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    alert('Admin Login Successful!');
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-
-const logout = () => {
-  signOut(auth);
-};
-
 export {
+  RecaptchaVerifier,
   auth,
   db,
-  logInWithEmailAndPassword,
-  logout,
+  signInWithEmailAndPassword,
+  signOut
 };
