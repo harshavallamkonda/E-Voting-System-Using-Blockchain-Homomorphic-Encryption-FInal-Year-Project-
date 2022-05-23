@@ -8,6 +8,9 @@ import VoterLogin from './components/pages/VoterLogin';
 import AdminLogin from './components/pages/AdminLogin';
 import AdminOptions from './components/pages/AdminOptions';
 import Voting from './components/pages/Voting';
+import CreatePoll from './components/pages/CreatePoll';
+import ConstituencyResult from './components/pages/ConstituencyResult';
+import ElectionResult from './components/pages/ElectionResult';
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
         <Route path='/voting' exact element={<Voting />} />
         <Route path="/admin" exact element={<AdminLogin />}/>
         <Route path="/admin/options" exact element={<AdminOptions />}/>
+        <Route path="/admin/create-poll" exact element={<CreatePoll />}/>
+        <Route path="/admin/constituency-result" exact element={<ConstituencyResult />}/>
+        <Route path="/admin/election-result" exact element={<ElectionResult />}/>
       </Routes>
     </Router>
     </>
