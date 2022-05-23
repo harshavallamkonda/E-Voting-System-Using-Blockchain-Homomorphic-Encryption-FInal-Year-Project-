@@ -43,7 +43,7 @@ const loadContract = async () => {
 }
 
 export const loadVoterAccount = async (votername, voterID, phonenumber) => {
-    const election = loadContract();
+    const election = await loadContract();
     try {
         election.methods.voterLogin(votername, voterID, phonenumber).call()
         return(true)
@@ -53,7 +53,7 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
 }
 
 export const vote = async (voterIndex, candidateID) => {
-    const election = loadContract()
+    const election = await loadContract()
     const voter = await election.voters(voterIndex)
     const voterAddress = await election.voters(voterIndex)[3]
     if(voter[4] === true){
