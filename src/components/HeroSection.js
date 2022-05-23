@@ -6,7 +6,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 /*images*/
 import votingmadeeasy from '../images/easeofvoting.png';
 import freeandfair from '../images/freeandfair.png';
-import security from '../images/security.png';
+import security from '../images/security2.png';
 
 function HeroSection() {
   return (
@@ -49,10 +49,9 @@ function HeroSection() {
         <Row>
           <Col>
           <div className="descImages">
-            <img src={security} alt="security.jpg" className="descImages"/> 
+            <img src={security} alt="security2.png" /*className="descImages"*/ height="50%" width="50%"/> 
           </div>
           </Col>
-          <br />
           <Col>
           <div>
             <h1>Security</h1>
