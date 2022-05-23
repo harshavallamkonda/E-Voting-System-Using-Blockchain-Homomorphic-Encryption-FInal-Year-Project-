@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import ElectionAbi from './Election.json';
+import ElectionAbi from '../../blockchain/build/contracts/Election.json';
 
 
 export const connectDefault = async () => {
@@ -43,7 +43,7 @@ const loadContract = async () => {
 }
 
 export const loadVoterAccount = async (votername, voterID, phonenumber) => {
-    const election = loadContract();
+    const election = await loadContract();
     try {
         election.methods.voterLogin(votername, voterID, phonenumber).call()
         return(true)
@@ -53,7 +53,7 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
 }
 
 export const vote = async (voterIndex, candidateID) => {
-    const election = loadContract()
+    const election = await loadContract()
     const voter = await election.voters(voterIndex)
     const voterAddress = await election.voters(voterIndex)[3]
     if(voter[4] === true){
@@ -86,7 +86,11 @@ export const addPoll = async (pollID, state, candidateID, candidateName, constit
 export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
 
     const election = loadContract()
-    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send( {from: adminAccount})
+    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send( {from: adminAccount}).on('transactionhash', () => {
+        console.log("Success declaration of winner")
+    }).catch( (error) => {
+        console.log(error)
+    })
     return winnerID
 
 }
@@ -94,6 +98,10 @@ export const constituencyWinner = async (pollID, candidateID, constituencyID) =>
 export const electionWinner = async (pollID) => {
 
     const election = loadContract()
-    const winningParty = await election.methods.electionWinner(pollID).send({from: adminAccount})
+    const winningParty = await election.methods.electionWinner(pollID).send({from: adminAccount}).on('transactionhash', () => {
+        console.log("Success declaration of winner")
+    }).catch( (error) => {
+        console.log(error)
+    })
     return winningParty
 }

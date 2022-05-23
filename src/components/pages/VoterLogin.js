@@ -63,10 +63,17 @@ export default function VoterLogin() {
       }
       
       event.preventDefault()
-          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+          window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+
+            }
+          }, auth);
           const appVerifier = window.recaptchaVerifier
-          signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((result) => {
+          signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+          .then( confirmationResult => {
               alert("OTP Sent Successfully!");
+              window.confirmationResult = confirmationResult
               setshow(true)
           })
           .catch((err) => {
@@ -79,45 +86,42 @@ export default function VoterLogin() {
     if (OTP === ""){
       return;
     }
-    routeChange()
     event.preventDefault()
 
-      window.confirmationResult
+    if(OTP.length === 6){
+
+      let confirmationResult = window.confirmationResult
+
+      confirmationResult
       .confirm(OTP)
-      .then((confirmationResult) => {
-        routeChange()
-        alert(confirmationResult)
-        /* Reroute to Voting Page unpon successful verfication of voter */
-        //routeChange();
+      .then((result) => {
+        setUser(result.user)
+        alert(
+          "Voter verified successfully"
+        )
+
+        if (loadVoterAccount({voterName},{voterID},{phoneNumber})){
+          alert(
+            "Voter Login Successful"
+          )
+          routeChange()
+        } 
+        else {
+          alert(
+            "Voter Login Failed"
+          )
+        }
+
       })
       .catch((error) => {
-        alert(error.message)
+        alert(
+          "User not verified please retry again"
+        )
+        window.location.reload(false)
       })
-      /*
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-            setUser(user);
-        }
-      });
-      console.log(user)
 
-      if (loadVoterAccount(
-        { voterName },
-        { voterID },
-        { phoneNumber }
-        )) 
-        {
-        alert(
-          "Voter Login Successful"
-        )
-      } 
-      else {
-        alert(
-          "Voter Login Failed"
-        )
-      }
-      */
-  };
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
