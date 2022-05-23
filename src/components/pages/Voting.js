@@ -6,10 +6,8 @@ import { useNavigate } from 'react-router-dom'
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
 
 function Voting() {
-
-
     let navigate = useNavigate()
-    
+
     useEffect( () => {
     })
 
@@ -17,9 +15,7 @@ function Voting() {
     const [candidateID, setCandidateID] = useState(0)
     const [voterIndex, setvoterIndex] = useState(0)
 
-
     const castVote = async (event, _candidateID) => {
-
         event.preventDefault()
         setvoterIndex((voterIndex) => voterIndex + 1)
         setCandidateID(_candidateID)
