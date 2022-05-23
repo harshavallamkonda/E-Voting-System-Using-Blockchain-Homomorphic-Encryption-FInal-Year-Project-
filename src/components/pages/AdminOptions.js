@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
+import { logout } from "../../firebase/config";
 
 function Copyright(props) {
   return (
@@ -21,27 +22,8 @@ function Copyright(props) {
   );
 }
 
-function AdminOptions({handleLogout}) {
-  /* Function to navigate to create poll on button click */
-  let navigateToCreatePoll = useNavigate();
-  const routeChangeToCreatePoll = () => {
-    let path = `/admin/create-poll`
-    navigateToCreatePoll(path);
-  }
-
-  /* Function to navigate to constituency result on button click */
-  let navigateToConstituencyResult = useNavigate();
-  const routeChangeToConstituencyResult = () => {
-    let path = `/admin/constituency-result`
-    navigateToConstituencyResult(path);
-  }
-
-  /* Function to navigate to create poll on button click */
-  let navigateToElectronResult = useNavigate();
-  const routeChangeToElectionResult = () => {
-    let path = `/admin/election-result`
-    navigateToElectronResult(path);
-  }
+function AdminOptions() {
+  const navigate = useNavigate();
 
   const theme = createTheme();
   return (
@@ -68,7 +50,8 @@ function AdminOptions({handleLogout}) {
               fontSize: "18px"
             }}
             sx={{ mt: 3, mb: 2 }}
-            onClick={handleLogout}
+            onClick={ logout }
+            onChange={navigate("/admin")}
             >
               Logout from Admin
             </Button>
@@ -83,7 +66,7 @@ function AdminOptions({handleLogout}) {
               fontSize: "18px"
             }}
             sx={{ mt: 3, mb: 2 }}
-            onClick = { routeChangeToCreatePoll }
+            onClick = { navigate("/admin/create-poll") }
             >
               Create Poll
             </Button>
@@ -98,7 +81,7 @@ function AdminOptions({handleLogout}) {
                 fontSize: "18px"
               }}
               sx={{ mt: 3, mb: 2 }}
-              onClick = { routeChangeToConstituencyResult }
+              onClick = { navigate("/admin/constituency-result") }
               >
                 Display Constituency's Election Result
               </Button>
@@ -113,7 +96,7 @@ function AdminOptions({handleLogout}) {
                 fontSize: "18px"
               }}
               sx={{ mt: 3, mb: 2 }}
-              onClick = { routeChangeToElectionResult }
+              onClick = { navigate("/admin/election-result") }
               >
                 Display Overall Election Result
               </Button>

@@ -10,9 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { auth } from '../../firebase/config';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { auth, logInWithEmailAndPassword } from "../../firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function Copyright(props) {
   return (
@@ -33,15 +33,10 @@ export default function AdminLogin() {
   //const [user, setUser] = React.useState("");
   const[email, setEmail] = React.useState("");
   const[password, setPassword] = React.useState("");
-  const [emailError, setEmailError] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState("");
+  const [user, loading] = useAuthState(auth);
 
   /* function for navigation */
   let navigate = useNavigate();
-  const routeChange = () => {
-    let path = `/admin/options`
-    navigate(path);
-  }
 
   /*
   const clearInputs = () => {
@@ -55,7 +50,7 @@ export default function AdminLogin() {
     setPasswordError("");
   }*/
 
-  const handleLogin = (event) => {
+  /*const handleLogin = (event) => {
     //clearErrors();
     //temporary routing to options page on button onClick
     routeChange();
@@ -86,8 +81,9 @@ export default function AdminLogin() {
       employeeid: data.get('employeeid'),
       password: data.get('password'),
     });
-    */
+    
   };
+  */
 
   /* LOGOUT
   const handleLogout = () => {
@@ -109,8 +105,11 @@ export default function AdminLogin() {
   */
 
   React.useEffect(() => {
-    //authListener();
-  }, [])
+    if (loading) {
+      return;
+    }
+    if (user) navigate('/admin/options')
+  }, [user, loading, navigate]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -130,7 +129,7 @@ export default function AdminLogin() {
             <Typography component="h2" variant="h5">
               Admininstrator Sign in
             </Typography>
-            <Box component="form" onSubmit={handleLogin} validate sx={{ mt: 1 }}>
+            <Box component="form" validate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -139,7 +138,6 @@ export default function AdminLogin() {
                 name="employeeid"
                 type="email"
                 onChange = { (e) => setEmail(e.target.value)}
-                { ...emailError && {error: true, helperText: emailError}}
             />
             <TextField
               margin="normal"
@@ -149,7 +147,6 @@ export default function AdminLogin() {
               label="Password"
               type="password"
               onChange={(e) => setPassword(e.target.value)}
-              { ...passwordError && {error: true, helperText: passwordError}}
             />
             
             <Button
@@ -157,6 +154,7 @@ export default function AdminLogin() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => logInWithEmailAndPassword(email, password)}
             >
               Sign In
             </Button>
