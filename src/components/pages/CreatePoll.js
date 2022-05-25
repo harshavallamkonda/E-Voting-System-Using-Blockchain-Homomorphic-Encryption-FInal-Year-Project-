@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
-import { db, doc, setDoc } from "../../firebase/config";
+import { db, collection, addDoc } from "../../firebase/config";
 import { Input } from '@mui/material';
 
 
@@ -122,7 +122,7 @@ export default function CreatePoll() {
 
     console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum,photo)
 
-    setDoc(doc(db, "test", "candidates"),{
+    addDoc(collection(db, "test"),{
           firstname:firstName,
           lastname:lastName,
           email:email,
