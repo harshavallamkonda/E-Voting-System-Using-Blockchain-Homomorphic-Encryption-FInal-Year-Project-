@@ -53,6 +53,7 @@ export default function AdminLogin() {
               alert("Admin logged in successfully!");
               window.confirmationResult = confirmationResult
               setshow(true)
+              navigate('/admin/options')
           })
           .catch((err) => {
               alert(err)
@@ -64,7 +65,7 @@ export default function AdminLogin() {
     if (loading) {
       return;
     }
-    if (user) navigate('/admin/options')
+    if (user) navigate(`/admin/options/${user}`);
   }, [user, loading, navigate]);
 
   return (
