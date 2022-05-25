@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { auth, RecaptchaVerifier, signInWithEmailAndPassword } from "../../firebase/config";
+import { auth, RecaptchaVerifier, signInWithEmailAndPassword, signOut } from "../../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 function Copyright(props) {
@@ -65,7 +65,7 @@ export default function AdminLogin() {
     if (loading) {
       return;
     }
-    if (user) navigate(`/admin/options/${user}`);
+    if (user) signOut(auth);
   }, [user, loading, navigate]);
 
   return (

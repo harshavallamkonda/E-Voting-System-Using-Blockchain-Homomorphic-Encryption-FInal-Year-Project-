@@ -7,6 +7,8 @@ import {
 } from "firebase/auth";
 import {
   getFirestore,
+  doc,
+  setDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -26,6 +28,8 @@ export {
   RecaptchaVerifier,
   auth,
   db,
+  doc, 
+  setDoc,
   signInWithEmailAndPassword,
   signOut
 };
