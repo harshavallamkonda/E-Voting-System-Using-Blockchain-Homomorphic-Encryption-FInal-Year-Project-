@@ -16,6 +16,7 @@ export const connectDefault = async () => {
         )
     }
 }
+
 let adminAccount = null;
 let pollID = null;
 
@@ -43,6 +44,7 @@ const loadContract = async () => {
 }
 
 export const loadVoterAccount = async (votername, voterID, phonenumber) => {
+
     const election = await loadContract();
     try {
         election.methods.voterLogin(votername, voterID, phonenumber).call()
@@ -50,6 +52,7 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
     } catch (error) {
         throw new Error(error)
     }
+    
 }
 
 export const vote = async (voterIndex, candidateID) => {
@@ -75,7 +78,7 @@ export const vote = async (voterIndex, candidateID) => {
 }
 
 export const addPoll = async (pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName) => {
-    const election = loadContract()
+    const election = await loadContract()
     await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
         window.alert(
             "Poll has been successfully created"
@@ -85,8 +88,8 @@ export const addPoll = async (pollID, state, candidateID, candidateName, constit
 
 export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
 
-    const election = loadContract()
-    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send( {from: adminAccount}).on('transactionhash', () => {
+    const election = await loadContract()
+    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send({from: adminAccount}).on('transactionhash', () => {
         console.log("Success declaration of winner")
     }).catch( (error) => {
         console.log(error)
@@ -97,11 +100,12 @@ export const constituencyWinner = async (pollID, candidateID, constituencyID) =>
 
 export const electionWinner = async (pollID) => {
 
-    const election = loadContract()
+    const election = await loadContract()
     const winningParty = await election.methods.electionWinner(pollID).send({from: adminAccount}).on('transactionhash', () => {
         console.log("Success declaration of winner")
     }).catch( (error) => {
         console.log(error)
     })
     return winningParty
+
 }
