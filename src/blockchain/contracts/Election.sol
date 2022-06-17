@@ -15,9 +15,6 @@ contract Election{
 
     }
 
-    struct VoterID {
-        uint voterIndex;
-    }
 
     struct Candidate {
         
@@ -53,21 +50,25 @@ contract Election{
     address public admin;
 
 
-    uint public voterCount = 0;
-    bool public constituencyExist = false;
-    uint public constituencyCount = 0;
+    uint public voterCount;
+    bool public constituencyExist;
+    uint public constituencyCount;
 
 
     mapping(uint => uint) candidateCount;
-    mapping(uint => Voter) public voters;
-    mapping(address => VoterID) public voterIDs;
+    mapping(address => Voter) public voters;
     mapping(uint => Poll) public poll;
     mapping(uint => uint) public winnerConstituencyCount;
 
 
     //The constructor gets executed when the contract is deployed and the address will assigned as admin.
     constructor() {
+
         admin = msg.sender;
+        voterCount = 0;
+        constituencyExist = false;
+        constituencyCount = 0;
+        
     }
 
     //The modifier or a constraint tracker which defines the function that can be executed by the admin only.
@@ -121,50 +122,68 @@ contract Election{
     //Prateek's web3
     function voterLogin(string memory _voterName, uint _voterID, uint _phoneNumber) public onlyVoter {
          
+        
+        voters[msg.sender].voterName = _voterName;
+        voters[msg.sender].voterID = _voterID;
+        voters[msg.sender].phoneNumber = _phoneNumber;
+        voters[msg.sender].voterAddress = msg.sender;
+        voters[msg.sender].voted = false;
         voterCount++;
-        voters[voterCount].voterName = _voterName;
-        voters[voterCount].voterID = _voterID;
-        voters[voterCount].phoneNumber = _phoneNumber;
-        voters[voterCount].voterAddress = msg.sender;
-        voters[voterCount].voted = false;
-        voterIDs[msg.sender].voterIndex = voterCount;
 
     }
     
 
     //Prateek's web3
     function vote(uint _pollID, uint _candidateID) public onlyVoter {
-
-        uint _voterIndex = voterIDs[msg.sender].voterIndex;     
-        require(!voters[_voterIndex].voted, "Voter can vote only once.");
-        voters[_voterIndex].voted = true;
-        voters[_voterIndex].vote = _candidateID;
+     
+        require(!voters[msg.sender].voted, "Voter can vote only once.");
+        voters[msg.sender].voted = true;
+        voters[msg.sender].vote = _candidateID;
         poll[_pollID].candidates[_candidateID].voteCount += 1;
+
     }
 
 
-    //Harsha's web3
-    function constituencyWinner(uint _pollID, uint _candidateID, uint _constituencyID) public onlyAdmin returns (uint _winnerID){
+    function _findingConstituencyWinner(uint _pollID, uint _constituencyID) internal returns (uint){
         uint maxVoteCount = 0;
-        for(uint _candidateIndex = 1; _candidateIndex < candidateCount[_constituencyID]; _candidateIndex++){
+        uint _winnerID = 0;
+        for(uint _candidateIndex = 0; _candidateIndex < candidateCount[_constituencyID]; _candidateIndex++){
             if(poll[_pollID].candidates[_candidateIndex].voteCount > maxVoteCount){
 
                 maxVoteCount = poll[_pollID].candidates[_candidateIndex].voteCount;
                 _winnerID = _candidateIndex;
-                winnerConstituencyCount[_candidateID]++;
+                
             }
         }
+        return _winnerID;
+    }
+
+    //Harsha's web3
+    function constituencyWinner(uint _pollID, uint _constituencyID) public view returns (uint _winnerID){
+
+        _winnerID = _findingConstituencyWinner(_pollID, _constituencyID);
+        return _winnerID;
+        
     }
 
 
+    function declareConstituencyWinner(uint _pollID, uint _constituencyID) public onlyAdmin {
+
+        uint _winnerID = _findingConstituencyWinner(_pollID, _constituencyID);
+        winnerConstituencyCount[_winnerID]++;
+
+    }
     //Harsha's web3
-    function electionWinner(uint _pollID) public view onlyAdmin returns (string memory _winningParty){
+    function electionWinner(uint _pollID) public view returns (string memory _winningParty){
         uint _winnerConstituencyCount = 0;
+        string memory _winningPartyName = "";
         for(uint _constituencyIndex = 0; _constituencyIndex < constituencyCount; _constituencyIndex++){
             if(_winnerConstituencyCount < winnerConstituencyCount[_constituencyIndex]){
-                _winningParty = poll[_pollID].candidates[_constituencyIndex].partyName;
+                _winnerConstituencyCount = winnerConstituencyCount[_constituencyIndex];
+                _winningPartyName = poll[_pollID].candidates[_constituencyIndex].partyName;
             }
         }
+        _winningParty = _winningPartyName;
     }
   
 }
