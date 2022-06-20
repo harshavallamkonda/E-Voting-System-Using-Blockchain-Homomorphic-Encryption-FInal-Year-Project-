@@ -91,8 +91,8 @@ const Constituency = [
     label: 'Haveri (Haveri District)',
   },
   {
-    value: 'Hangal (Haveri District)',
-    label: 'Hangal (Haveri District)',
+    value: 'Hanagal (Haveri District)',
+    label: 'Hanagal (Haveri District)',
   },
 ];
 
@@ -123,7 +123,7 @@ export default function CreatePoll() {
 
     console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum/*,photo*/)
 
-    addDoc(collection(db, "test"),{
+    addDoc(collection(db, "candidate-details"),{
           firstname:firstName,
           lastname:lastName,
           email:email,
