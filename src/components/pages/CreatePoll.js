@@ -10,10 +10,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
+/*import InputLabel from '@mui/material/InputLabel';
+import { Input } from '@mui/material';*/
 import { db, collection, addDoc } from "../../firebase/config";
-import { Input } from '@mui/material';
-
 
 function Copyright(props) {
   return (
@@ -114,13 +113,15 @@ export default function CreatePoll() {
   const [constituency, setconstituency] = React.useState("");
   const [pollid, setpollid] = React.useState("");
   const [wardnum, setwardnum] = React.useState("");
+  /*
   const [partyimage, setpartyimage] = React.useState("");
   const [photo, setphoto] = React.useState("");
+  */
 
   const submitHandler = (e) => {
     e.preventDefault()
 
-    console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum,photo)
+    console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum/*,photo*/)
 
     addDoc(collection(db, "test"),{
           firstname:firstName,
@@ -134,8 +135,10 @@ export default function CreatePoll() {
           state:state,
           wardnum:wardnum,
           constituency:constituency,
+          /* For
           photo:photo,
           partyimage:partyimage,
+          */
           //image:URL.createObjectURL(formData.stepThree.image.fileName),
           //image:formData.stepThree.image.fileName,
           //partyimage:formData.stepTwo.partyimage.fileName,
@@ -172,7 +175,7 @@ export default function CreatePoll() {
                     margin="normal"
                     required
                     fullWidth
-                    label="First Name as per Voter ID"
+                    label="Candidate's First Name"
                     name="firstName"
                     value={firstName}
                     onChange={(e) => setfirstName(e.target.value)}
@@ -203,6 +206,7 @@ export default function CreatePoll() {
                         </MenuItem>
                       ))}
                     </TextField>
+                    {/*
                     <br />
                     <br />
                     <InputLabel htmlFor="contained-button-file">
@@ -214,13 +218,14 @@ export default function CreatePoll() {
                       value={photo}
                       onChange={(e) => setphoto(e.target.value)}
                     />
+                    */}
                   </Grid>  
                   <Grid item xs={6}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        label="Last Name as per Voter ID"
+                        label="Candidate's Last Name"
                         name="lastName"
                         value={lastName}
                         onChange={(e) => setlastName(e.target.value)}
@@ -230,7 +235,7 @@ export default function CreatePoll() {
                         margin="normal"
                         required
                         fullWidth
-                        label="Enter your Email-ID"
+                        label="Email ID"
                         name="email"
                         value={email}
                         onChange={(e) => setemail(e.target.value)}
@@ -239,7 +244,7 @@ export default function CreatePoll() {
                         margin="normal"
                         required
                         fullWidth
-                        label="Enter your Phone Number"
+                        label="Phone Number"
                         type="number"
                         name="pnum"
                         value={pnum}
@@ -252,7 +257,7 @@ export default function CreatePoll() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Enter Poll ID "
+                    label="Poll ID "
                     name="pollid"
                     value={pollid}
                     onChange={(e) => setpollid(e.target.value)}
@@ -262,7 +267,7 @@ export default function CreatePoll() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Enter The Ward number..."
+                    label="Ward number"
                     name="wardnum"
                     value={wardnum}
                     onChange={(e) => setwardnum(e.target.value)}
@@ -284,6 +289,7 @@ export default function CreatePoll() {
                       </MenuItem>
                     ))}
                   </TextField>
+                  {/*
                   <br />
                   <br />
                   <InputLabel htmlFor="contained-button-file">Upload Party Image</InputLabel>
@@ -295,6 +301,7 @@ export default function CreatePoll() {
                   />
                   <br />
                   <br />
+                    */}
                 </Grid>  
                 <Grid item xs={6}>
                       <TextField
