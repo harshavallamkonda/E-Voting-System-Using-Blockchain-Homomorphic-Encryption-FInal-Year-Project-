@@ -49,8 +49,6 @@ const State = [
   },
   
 ];
-
-
 const PartyName = [
   {
     value: 'Bharatiya Janata Party',
@@ -106,8 +104,8 @@ export default function CreatePoll() {
   const [lastName, setlastName] = React.useState("");
   const [dob, setdob] = React.useState("");
   const [gender, setgender] = React.useState("");
-  const [email, setemail] = React.useState("");
-  const [pnum, setpnum] = React.useState("");
+  /*const [email, setemail] = React.useState("");*/
+  /*const [pnum, setpnum] = React.useState("");*/
   const [partyname, setpartyname] = React.useState("");
   const [state, setstate] = React.useState("");
   const [constituency, setconstituency] = React.useState("");
@@ -121,14 +119,14 @@ export default function CreatePoll() {
   const submitHandler = (e) => {
     e.preventDefault()
 
-    console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum/*,photo*/)
+    console.log(db, firstName,lastName, /*email*/dob,gender,/*pnum,*/partyname,state,constituency,pollid,wardnum/*,photo*/)
 
     addDoc(collection(db, "candidate-details"),{
           firstname:firstName,
           lastname:lastName,
-          email:email,
+          //email:email,
           dob:dob,
-          phonenumber:pnum,
+          //phonenumber:pnum,
           gender:gender,
           partyname:partyname,
           pollid:pollid,
@@ -190,22 +188,7 @@ export default function CreatePoll() {
                     value={dob}
                     onChange={(e) => setdob(e.target.value)}
                     />
-                    <TextField
-                    id="outlined-select-currency"
-                    select
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Gender"
-                    value={gender}
-                    onChange={(e) => setgender(e.target.value)}
-                    >
-                      {Gender.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    
                     {/*
                     <br />
                     <br />
@@ -230,7 +213,23 @@ export default function CreatePoll() {
                         value={lastName}
                         onChange={(e) => setlastName(e.target.value)}
                     />
-                  
+                    <TextField
+                    id="outlined-select-currency"
+                    select
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Gender"
+                    value={gender}
+                    onChange={(e) => setgender(e.target.value)}
+                    >
+                      {Gender.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  {/*
                       <TextField
                         margin="normal"
                         required
@@ -245,11 +244,11 @@ export default function CreatePoll() {
                         required
                         fullWidth
                         label="Phone Number"
-                        type="number"
                         name="pnum"
                         value={pnum}
                         onChange={(e) => setpnum(e.target.value)}
                     />
+                    */}
               </Grid>
               <Grid item xs={6}>
                 
@@ -262,16 +261,23 @@ export default function CreatePoll() {
                     value={pollid}
                     onChange={(e) => setpollid(e.target.value)}
                 />
-                  
                   <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Ward number"
-                    name="wardnum"
-                    value={wardnum}
-                    onChange={(e) => setwardnum(e.target.value)}
-                />
+                        id="outlined-select-currency"
+                        select
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Constituency"
+                        value={constituency}
+                        onChange={(e) => setconstituency(e.target.value)}
+                      >
+                        {Constituency.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                        </TextField>
+                  
                   <TextField
                     id="outlined-select-currency"
                     select
@@ -322,22 +328,14 @@ export default function CreatePoll() {
                         ))}
                       </TextField>
                       <TextField
-                        id="outlined-select-currency"
-                        select
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Constituency"
-                        value={constituency}
-                        onChange={(e) => setconstituency(e.target.value)}
-                        
-                      >
-                        {Constituency.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                        </TextField>
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Ward number"
+                    name="wardnum"
+                    value={wardnum}
+                    onChange={(e) => setwardnum(e.target.value)}
+                />
                   
                   </Grid>
                 
