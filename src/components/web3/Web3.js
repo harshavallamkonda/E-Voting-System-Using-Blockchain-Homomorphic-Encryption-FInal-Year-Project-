@@ -17,14 +17,20 @@ export const connectDefault = async () => {
     }
 }
 
-let adminAccount = null;
+
 let pollID = null;
 
-export const loadAdminAccount = async () => {
+export const isAdmin = async (adminAccount) => {
+
+    const election = await loadContract();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
     adminAccount = accounts[0];
-    return(adminAccount)
+    let isAdmin = true;
+    const admin = await election.methods.admin.call().call();
+    (adminAccount === admin) ? isAdmin = true : isAdmin = false;
+    return(isAdmin);
+
 }
 
 const loadContract = async () => {
@@ -47,7 +53,7 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
 
     const election = await loadContract();
     try {
-        election.methods.voterLogin(votername, voterID, phonenumber).call()
+        election.methods.voterLogin(votername, voterID, phonenumber).send({from: voterAddress})
         return(true)
     } catch (error) {
         throw new Error(error)
@@ -79,11 +85,18 @@ export const vote = async (voterIndex, candidateID) => {
 
 export const addPoll = async (pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName) => {
     const election = await loadContract()
-    await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
-        window.alert(
+    const adminAddress = election.methods.admin.call().call();
+    if(isAdmin(adminAddress)){
+        await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
+            window.alert(
             "Poll has been successfully created"
+            )
+        })
+    }else{
+        window.alert(
+            "You are not authorized to create a poll"
         )
-    })
+    }
 }
 
 export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
