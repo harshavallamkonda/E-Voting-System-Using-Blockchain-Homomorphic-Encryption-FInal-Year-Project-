@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { connectDefault, loadVoterAccount } from '../web3/Web3'
-import { db, auth } from '../../firebase/config'
+import { db, auth, collection, query, where, getDocs } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 /* For routing to voting page after successfull verification */
 import { useNavigate } from 'react-router-dom';
@@ -73,15 +73,14 @@ export default function VoterLogin() {
 
           /*
           //Query to check if voter's details exist in the election commission's database
-          const voterRef = db.collection('voter-details')
-          .where("Name", "===", voterName)
-          .where("Voter ID", "===", voterID)
-          .where("Phone", "===", phoneNumber);
 
-          voterRef.get().then((snapshot) => {
-            if (snapshot.empty){
-              alert("Invalid Credentials\nEnter the correct credentials");
-              window.location.reload();
+          const voterRef = collection(db, 'voter-details')
+
+          const query = query(voterRef, where('voterID', '==', voterID))
+
+          onSnapshot(query, (snapshot) => {
+            if (snapshot.empty) {
+              alert("Voter ID not found")
             }
           })
           //end of the query to see if voter exists
