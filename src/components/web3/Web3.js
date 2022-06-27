@@ -19,21 +19,19 @@ export const connectDefault = async () => {
 
 
 let pollID = null;
+let adminAccount = null;
 
-export const isAdmin = async (adminAccount) => {
+export const isAdmin = async () => {
 
-    const election = await loadContract();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
     adminAccount = accounts[0];
-    let isAdmin = true;
-    const admin = await election.methods.admin.call().call();
-    (adminAccount === admin) ? isAdmin = true : isAdmin = false;
-    return(isAdmin);
-
+    
 }
 
 const loadContract = async () => {
+
+
     const web3 = window.web3;
     const networkID = await web3.eth.net.getId();
     const networkData = ElectionAbi.networks[networkID];
@@ -47,11 +45,16 @@ const loadContract = async () => {
             "Smart Contract couldn't be deployed contact the IT Department"
         )
     }
+
+
 }
 
 export const loadVoterAccount = async (votername, voterID, phonenumber) => {
 
     const election = await loadContract();
+    const accounts = await window.web3.eth.getAccounts();
+    const voterAddress = accounts[0];
+    
     try {
         election.methods.voterLogin(votername, voterID, phonenumber).send({from: voterAddress})
         return(true)
@@ -61,10 +64,13 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
     
 }
 
-export const vote = async (voterIndex, candidateID) => {
+export const vote = async (candidateID) => {
+    
     const election = await loadContract()
-    const voter = await election.voters(voterIndex)
-    const voterAddress = await election.voters(voterIndex)[3]
+    const accounts = await window.web3.eth.getAccounts();
+    const voterAddress = accounts[0];
+    const voter = await election.voters(voterAddress)
+
     if(voter[4] === true){
         window.alert(
             "The address " + {voterAddress} + "has already voted, this window will close now."
@@ -85,18 +91,18 @@ export const vote = async (voterIndex, candidateID) => {
 
 export const addPoll = async (pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName) => {
     const election = await loadContract()
-    const adminAddress = election.methods.admin.call().call();
-    if(isAdmin(adminAddress)){
-        await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
-            window.alert(
-            "Poll has been successfully created"
-            )
-        })
-    }else{
+
+    await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
         window.alert(
-            "You are not authorized to create a poll"
+        "Poll has been successfully created"
         )
-    }
+    }).catch(error => {
+        window.alert(
+            "Poll couldn't be created, please try again."
+        )
+        console.log(error)
+    })
+    
 }
 
 export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
