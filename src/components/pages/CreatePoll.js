@@ -10,10 +10,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
+/*import InputLabel from '@mui/material/InputLabel';
+import { Input } from '@mui/material';*/
 import { db, collection, addDoc } from "../../firebase/config";
-import { Input } from '@mui/material';
-
 
 function Copyright(props) {
   return (
@@ -50,8 +49,6 @@ const State = [
   },
   
 ];
-
-
 const PartyName = [
   {
     value: 'Bharatiya Janata Party',
@@ -92,8 +89,8 @@ const Constituency = [
     label: 'Haveri (Haveri District)',
   },
   {
-    value: 'Hangal (Haveri District)',
-    label: 'Hangal (Haveri District)',
+    value: 'Hanagal (Haveri District)',
+    label: 'Hanagal (Haveri District)',
   },
 ];
 
@@ -107,35 +104,39 @@ export default function CreatePoll() {
   const [lastName, setlastName] = React.useState("");
   const [dob, setdob] = React.useState("");
   const [gender, setgender] = React.useState("");
-  const [email, setemail] = React.useState("");
-  const [pnum, setpnum] = React.useState("");
+  /*const [email, setemail] = React.useState("");*/
+  /*const [pnum, setpnum] = React.useState("");*/
   const [partyname, setpartyname] = React.useState("");
   const [state, setstate] = React.useState("");
   const [constituency, setconstituency] = React.useState("");
   const [pollid, setpollid] = React.useState("");
   const [wardnum, setwardnum] = React.useState("");
+  /*
   const [partyimage, setpartyimage] = React.useState("");
   const [photo, setphoto] = React.useState("");
+  */
 
   const submitHandler = (e) => {
     e.preventDefault()
 
-    console.log(db, firstName,lastName, email,dob,gender,email,pnum,partyname,state,constituency,pollid,wardnum,photo)
+    console.log(db, firstName,lastName, /*email*/dob,gender,/*pnum,*/partyname,state,constituency,pollid,wardnum/*,photo*/)
 
-    addDoc(collection(db, "test"),{
+    addDoc(collection(db, "candidate-details"),{
           firstname:firstName,
           lastname:lastName,
-          email:email,
+          //email:email,
           dob:dob,
-          phonenumber:pnum,
+          //phonenumber:pnum,
           gender:gender,
           partyname:partyname,
           pollid:pollid,
           state:state,
           wardnum:wardnum,
           constituency:constituency,
+          /* For
           photo:photo,
           partyimage:partyimage,
+          */
           //image:URL.createObjectURL(formData.stepThree.image.fileName),
           //image:formData.stepThree.image.fileName,
           //partyimage:formData.stepTwo.partyimage.fileName,
@@ -172,7 +173,7 @@ export default function CreatePoll() {
                     margin="normal"
                     required
                     fullWidth
-                    label="First Name as per Voter ID"
+                    label="Candidate's First Name"
                     name="firstName"
                     value={firstName}
                     onChange={(e) => setfirstName(e.target.value)}
@@ -186,6 +187,31 @@ export default function CreatePoll() {
                     name="dob"
                     value={dob}
                     onChange={(e) => setdob(e.target.value)}
+                    />
+                    
+                    {/*
+                    <br />
+                    <br />
+                    <InputLabel htmlFor="contained-button-file">
+                      Upload Candidate Image
+                    </InputLabel>
+                    <Input
+                      id="contained-button-file"
+                      type="file"
+                      value={photo}
+                      onChange={(e) => setphoto(e.target.value)}
+                    />
+                    */}
+                  </Grid>  
+                  <Grid item xs={6}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Candidate's Last Name"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(e) => setlastName(e.target.value)}
                     />
                     <TextField
                     id="outlined-select-currency"
@@ -203,34 +229,12 @@ export default function CreatePoll() {
                         </MenuItem>
                       ))}
                     </TextField>
-                    <br />
-                    <br />
-                    <InputLabel htmlFor="contained-button-file">
-                      Upload Candidate Image
-                    </InputLabel>
-                    <Input
-                      id="contained-button-file"
-                      type="file"
-                      value={photo}
-                      onChange={(e) => setphoto(e.target.value)}
-                    />
-                  </Grid>  
-                  <Grid item xs={6}>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Last Name as per Voter ID"
-                        name="lastName"
-                        value={lastName}
-                        onChange={(e) => setlastName(e.target.value)}
-                    />
-                  
+                  {/*
                       <TextField
                         margin="normal"
                         required
                         fullWidth
-                        label="Enter your Email-ID"
+                        label="Email ID"
                         name="email"
                         value={email}
                         onChange={(e) => setemail(e.target.value)}
@@ -239,12 +243,12 @@ export default function CreatePoll() {
                         margin="normal"
                         required
                         fullWidth
-                        label="Enter your Phone Number"
-                        type="number"
+                        label="Phone Number"
                         name="pnum"
                         value={pnum}
                         onChange={(e) => setpnum(e.target.value)}
                     />
+                    */}
               </Grid>
               <Grid item xs={6}>
                 
@@ -252,21 +256,28 @@ export default function CreatePoll() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Enter Poll ID "
+                    label="Poll ID "
                     name="pollid"
                     value={pollid}
                     onChange={(e) => setpollid(e.target.value)}
                 />
-                  
                   <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Enter The Ward number..."
-                    name="wardnum"
-                    value={wardnum}
-                    onChange={(e) => setwardnum(e.target.value)}
-                />
+                        id="outlined-select-currency"
+                        select
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Constituency"
+                        value={constituency}
+                        onChange={(e) => setconstituency(e.target.value)}
+                      >
+                        {Constituency.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                        </TextField>
+                  
                   <TextField
                     id="outlined-select-currency"
                     select
@@ -284,6 +295,7 @@ export default function CreatePoll() {
                       </MenuItem>
                     ))}
                   </TextField>
+                  {/*
                   <br />
                   <br />
                   <InputLabel htmlFor="contained-button-file">Upload Party Image</InputLabel>
@@ -295,6 +307,7 @@ export default function CreatePoll() {
                   />
                   <br />
                   <br />
+                    */}
                 </Grid>  
                 <Grid item xs={6}>
                       <TextField
@@ -315,22 +328,14 @@ export default function CreatePoll() {
                         ))}
                       </TextField>
                       <TextField
-                        id="outlined-select-currency"
-                        select
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Constituency"
-                        value={constituency}
-                        onChange={(e) => setconstituency(e.target.value)}
-                        
-                      >
-                        {Constituency.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                        </TextField>
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Ward number"
+                    name="wardnum"
+                    value={wardnum}
+                    onChange={(e) => setwardnum(e.target.value)}
+                />
                   
                   </Grid>
                 

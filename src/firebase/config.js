@@ -9,6 +9,10 @@ import {
   getFirestore,
   collection,
   addDoc,
+  collectionGroup,
+  query,
+  where,
+  getDocs
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -29,6 +33,10 @@ export {
   auth,
   db,
   collection, 
+  collectionGroup,
+  query,
+  where,
+  getDocs,
   addDoc,
   signInWithEmailAndPassword,
   signOut

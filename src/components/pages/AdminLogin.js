@@ -50,7 +50,7 @@ export default function AdminLogin() {
           const appVerifier = window.recaptchaVerifier
           signInWithEmailAndPassword(auth, email, password, appVerifier)
           .then( confirmationResult => {
-              alert("Admin logged in successfully!");
+            alert("Admin logged in successfully!");
               window.confirmationResult = confirmationResult
               setshow(true)
               navigate('/admin/options')

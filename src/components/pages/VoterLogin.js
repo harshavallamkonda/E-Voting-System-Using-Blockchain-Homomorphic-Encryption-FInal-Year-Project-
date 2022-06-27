@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { connectDefault, loadVoterAccount } from '../web3/Web3'
-import { auth } from '../../firebase/config'
+import { db, auth } from '../../firebase/config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 /* For routing to voting page after successfull verification */
 import { useNavigate } from 'react-router-dom';
@@ -70,6 +70,23 @@ export default function VoterLogin() {
             }
           }, auth);
           const appVerifier = window.recaptchaVerifier
+
+          /*
+          //Query to check if voter's details exist in the election commission's database
+          const voterRef = db.collection('voter-details')
+          .where("Name", "===", voterName)
+          .where("Voter ID", "===", voterID)
+          .where("Phone", "===", phoneNumber);
+
+          voterRef.get().then((snapshot) => {
+            if (snapshot.empty){
+              alert("Invalid Credentials\nEnter the correct credentials");
+              window.location.reload();
+            }
+          })
+          //end of the query to see if voter exists
+          */
+
           signInWithPhoneNumber(auth, phoneNumber, appVerifier)
           .then( confirmationResult => {
               alert("OTP Sent Successfully!");
