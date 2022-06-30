@@ -12,7 +12,8 @@ import {
   collectionGroup,
   query,
   where,
-  getDocs
+  getDocs,
+  onSnapshot
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -39,5 +40,6 @@ export {
   getDocs,
   addDoc,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onSnapshot
 };

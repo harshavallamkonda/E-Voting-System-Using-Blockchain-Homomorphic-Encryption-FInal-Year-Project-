@@ -56,10 +56,18 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
     const voterAddress = accounts[0];
     
     try {
-        election.methods.voterLogin(votername, voterID, phonenumber).send({from: voterAddress})
+        await election.methods.voterLogin(votername, voterID, phonenumber).send({from: voterAddress}).on('transactionhash', () => {
+            window.alert(
+                "Login is being processed. Please wait."
+            )
+        })
         return(true)
     } catch (error) {
-        throw new Error(error)
+        window.alert(
+            "Login failed. Please try again."
+        )
+        console.log(error)
+        return(false)
     }
     
 }

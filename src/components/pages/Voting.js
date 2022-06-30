@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { Col, Container, Row, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { vote } from '../web3/Web3'
 import Home from './Home'
 import { useNavigate } from 'react-router-dom'

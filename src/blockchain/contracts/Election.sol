@@ -7,7 +7,7 @@ contract Election{
     struct Voter {
 
         string voterName;
-        uint voterID;
+        string voterID;
         uint phoneNumber;
         address voterAddress;
         bool voted;
@@ -120,7 +120,7 @@ contract Election{
     
 
     //Prateek's web3
-    function voterLogin(string memory _voterName, uint _voterID, uint _phoneNumber) public onlyVoter {
+    function voterLogin(string memory _voterName, string _voterID, uint _phoneNumber) public onlyVoter {
          
         
         voters[msg.sender].voterName = _voterName;
