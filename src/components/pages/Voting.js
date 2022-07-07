@@ -217,9 +217,12 @@ const Voting = () => {
 								</React.Fragment>
 							}
 						/>
+						<br />
+						<br />
 						<Button
 							style={{
 								backgroundColor: "rgb(255, 194, 0)",
+								maxWidth: "50%",
 							}}
 							onClick={(e) => {
 								castVote(e, 3);
