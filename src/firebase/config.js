@@ -6,14 +6,16 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  doc,
   getFirestore,
   collection,
   addDoc,
   collectionGroup,
   query,
   where,
+  getDoc,
   getDocs,
-  onSnapshot
+  onSnapshot,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -30,6 +32,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 export {
+  doc,
   RecaptchaVerifier,
   auth,
   db,
@@ -37,9 +40,10 @@ export {
   collectionGroup,
   query,
   where,
+  getDoc,
   getDocs,
   addDoc,
   signInWithEmailAndPassword,
   signOut,
-  onSnapshot
+  onSnapshot,
 };
