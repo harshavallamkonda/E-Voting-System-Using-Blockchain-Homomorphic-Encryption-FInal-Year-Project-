@@ -21,19 +21,6 @@ import {
 } from "../../firebase/config";
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
 
-let voterCollectionID = "";
-export const fetchVoterLogin = (VoterID) => {
-	if (VoterID === "HTU6548521") {
-		voterCollectionID = "432yNM9WwVRhYOg10PlY";
-	} else if (VoterID === "KLE9852145") {
-		voterCollectionID = "EdgWaYGGSdupIKxleYSe";
-	} else if (VoterID === "SEW6521432") {
-		voterCollectionID = "Ouv1YADgMobbNO1Gxxx3";
-	} else if (VoterID === "DGU8524763") {
-		voterCollectionID = "urqEOntG6IlkBccG53YN";
-	}
-};
-
 const Voting = () => {
 	let navigate = useNavigate();
 

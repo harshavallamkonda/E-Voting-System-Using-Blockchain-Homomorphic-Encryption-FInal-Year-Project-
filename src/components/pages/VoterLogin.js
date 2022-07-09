@@ -130,15 +130,8 @@ export default function VoterLogin() {
 					setUser(result.user);
 					alert("Voter verified successfully");
 
-					if (
-						loadVoterAccount(
-							{ voterName },
-							{ voterID },
-							{ phoneNumber },
-						)
-					) {
+					if (loadVoterAccount({ voterName }, { voterID }, { phoneNumber })) {
 						alert("Voter Login Successful");
-						fetchVoterLogin(collectionID);
 						routeChange();
 					} else {
 						alert("Voter Login Failed");
