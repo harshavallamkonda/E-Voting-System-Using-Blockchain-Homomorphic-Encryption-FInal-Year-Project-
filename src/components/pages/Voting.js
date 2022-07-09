@@ -41,6 +41,7 @@ const Voting = () => {
 	const [name, setName] = useState("");
 	const [constituency, setConstituency] = useState("");
 	const [state, setState] = useState("");
+	const [wardnum, setWardnum] = useState("");
 
 	//candidate details
 	const [candidateDetails, setCandidateDetails] = useState([]);
@@ -62,6 +63,7 @@ const Voting = () => {
 		setName(docSnap.data().Name);
 		setConstituency(docSnap.data().Constituency);
 		setState(docSnap.data().State);
+		setWardnum(docSnap.data().Wardnum);
 	};
 	fetchVoterData();
 
@@ -69,7 +71,7 @@ const Voting = () => {
 	const fetchCandidateData = async () => {
 		const q = query(
 			collection(db, "candidate-details"),
-			where("wardnum", "==", "55"),
+			where("wardnum", "==", wardnum.toString()),
 		);
 
 		const querySnapshot = await getDocs(q);
