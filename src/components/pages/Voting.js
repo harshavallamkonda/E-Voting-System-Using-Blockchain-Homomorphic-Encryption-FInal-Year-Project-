@@ -37,6 +37,10 @@ export const fetchVoterLogin = (VoterID) => {
 const Voting = () => {
 	let navigate = useNavigate();
 
+	const handleVoterLogout = () => {
+		navigate(`/voter-sign-in`);
+	};
+
 	//voter details
 	const [name, setName] = useState("");
 	const [constituency, setConstituency] = useState("");
@@ -65,10 +69,9 @@ const Voting = () => {
 		setState(docSnap.data().State);
 		setWardnum(docSnap.data().Wardnum);
 	};
-	fetchVoterData();
 
 	//fetching candidate details
-	const fetchCandidateData = async () => {
+	const fetchCandidateData = async (wardnum) => {
 		const q = query(
 			collection(db, "candidate-details"),
 			where("wardnum", "==", wardnum.toString()),
@@ -86,8 +89,10 @@ const Voting = () => {
 	};
 
 	useEffect(() => {
-		fetchCandidateData();
-	}, []);
+		fetchVoterData();
+		console.log(wardnum);
+		fetchCandidateData(wardnum);
+	}, [wardnum]);
 	console.log(candidateDetails);
 
 	const castVote = (event, _candidateID) => {
@@ -120,7 +125,7 @@ const Voting = () => {
 
 	const paperstyle = {
 		padding: 30,
-		height: "50vh",
+		height: "60vh",
 		width: "40vh",
 		margin: "60px auto",
 	};
@@ -188,6 +193,18 @@ const Voting = () => {
 							{state}
 						</Typography>
 					</Grid>
+					<br />
+					<Button
+						fullWidth
+						variant='contained'
+						style={{
+							borderRadius: 50,
+							backgroundColor: "rgb(255, 209, 3)",
+						}}
+						sx={{ mt: 3, mb: 2 }}
+						onClick={handleVoterLogout}>
+						Logout
+					</Button>
 				</Grid>
 			</Paper>
 
