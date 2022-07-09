@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,10 +10,16 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { connectDefault, loadVoterAccount } from "../web3/Web3";
-import { auth } from "../../firebase/config";
+import {
+	query,
+	collection,
+	db,
+	where,
+	getDoc,
+	auth,
+} from "../../firebase/config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
-import { fetchVoterLogin } from "../pages/Voting";
 import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
@@ -36,13 +42,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function VoterLogin() {
-	const [voterName, setvoterName] = React.useState("");
-	const [voterID, setvoterID] = React.useState("");
-	const [phoneNumber, setphoneNumber] = React.useState("");
-	const [OTP, setOTP] = React.useState("");
-	const [user, setUser] = React.useState([]);
-	const [show, setshow] = React.useState(false);
-	const [collectionID, setcollectionID] = React.useState(0);
+	const [voterName, setvoterName] = useState("");
+	const [voterID, setvoterID] = useState("");
+	const [phoneNumber, setphoneNumber] = useState("");
+	const [OTP, setOTP] = useState("");
+	const [user, setUser] = useState([]);
+	const [show, setshow] = useState(false);
 
 	/* function for navigation */
 	let navigate = useNavigate();
@@ -67,16 +72,6 @@ export default function VoterLogin() {
 			return;
 		}
 
-		if (voterID === "HTU6548521") {
-			setcollectionID(1);
-		} else if (voterID === "KLE9852145") {
-			setcollectionID(2);
-		} else if (voterID === "SEW6521432") {
-			setcollectionID(3);
-		} else {
-			setcollectionID(4);
-		}
-
 		event.preventDefault();
 		window.recaptchaVerifier = new RecaptchaVerifier(
 			"recaptcha-container",
@@ -88,20 +83,20 @@ export default function VoterLogin() {
 		);
 		const appVerifier = window.recaptchaVerifier;
 
-		/*Query to check if voter's details exist in the election commission's database
+		//Query to check if voter's details exist in the election commission's database
+		const voterExists = async () => {
+			const q = query(
+				collection(db, "voter-details"),
+				where("VoterID", "==", voterID.toString()),
+			);
+			const querySnapshot = await getDoc(q);
 
-          const voterRef = collection(db, 'voter-details')
-
-          const q = query(voterRef, where('voterID', '==', voterID))
-
-          onSnapshot(q, (snapshot) => {
-            if (snapshot.empty) {
-              alert("Voter ID not found")
-            }
-          })
-
-          //end of the query to see if voter exists
-          */
+			if (querySnapshot.length === 0) {
+				alert("Voter not found");
+			} else {
+				console.log("Voter found, Name: " + querySnapshot.data().Name);
+			}
+		};
 
 		signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 			.then((confirmationResult) => {

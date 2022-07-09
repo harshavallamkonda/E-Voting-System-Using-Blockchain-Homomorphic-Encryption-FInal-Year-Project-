@@ -33,6 +33,7 @@ const Voting = () => {
 	const [constituency, setConstituency] = useState("");
 	const [state, setState] = useState("");
 	const [wardnum, setWardnum] = useState("");
+	const [voterDocID, setVoterDocID] = useState("");
 
 	//candidate details
 	const [candidateDetails, setCandidateDetails] = useState([]);
@@ -40,9 +41,28 @@ const Voting = () => {
 	const [candidateID, setCandidateID] = useState(0);
 	const [voterIndex, setvoterIndex] = useState(0);
 
+	const voterID = "DGU8524763";
+
+	//fetch voter document ID from the database to fetch the voter detais
+	const fetchVoterDocumentID = async () => {
+		const q = query(
+			collection(db, "voter-details"),
+			where("VoterID", "==", voterID),
+		);
+
+		const querySnapshot = await getDocs(q);
+
+		querySnapshot.docs.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(doc.id, " => ", doc.data());
+			setVoterDocID(doc.id);
+		});
+		console.log(voterDocID);
+	};
+
 	//fetching voter details
-	const fetchVoterData = async () => {
-		const docRef = doc(db, "voter-details", "432yNM9WwVRhYOg10PlY");
+	const fetchVoterData = async (voterDocID) => {
+		const docRef = doc(db, "voter-details", voterDocID);
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
@@ -76,10 +96,13 @@ const Voting = () => {
 	};
 
 	useEffect(() => {
-		fetchVoterData();
+		fetchVoterDocumentID();
+		console.log(voterDocID);
+		fetchVoterData(voterDocID);
+		console.log(name, constituency, state);
 		console.log(wardnum);
 		fetchCandidateData(wardnum);
-	}, [wardnum]);
+	}, [voterDocID, wardnum]);
 	console.log(candidateDetails);
 
 	const castVote = (event, _candidateID) => {
