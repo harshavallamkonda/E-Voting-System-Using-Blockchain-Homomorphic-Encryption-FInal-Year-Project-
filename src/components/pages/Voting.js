@@ -57,7 +57,6 @@ const Voting = () => {
 			console.log(doc.id, " => ", doc.data());
 			setVoterDocID(doc.id);
 		});
-		console.log(voterDocID);
 	};
 
 	//fetching voter details
@@ -103,7 +102,6 @@ const Voting = () => {
 		console.log(wardnum);
 		fetchCandidateData(wardnum);
 	}, [voterDocID, wardnum]);
-	console.log(candidateDetails);
 
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
