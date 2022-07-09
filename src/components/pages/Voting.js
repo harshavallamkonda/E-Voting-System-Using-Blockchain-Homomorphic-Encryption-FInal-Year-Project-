@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
 import { vote } from "../web3/Web3";
 import { useNavigate } from "react-router-dom";
 import { Grid, Paper, Avatar } from "@material-ui/core";
@@ -62,8 +62,6 @@ const Voting = () => {
 		setName(docSnap.data().Name);
 		setConstituency(docSnap.data().Constituency);
 		setState(docSnap.data().State);
-
-		console.log(name, constituency, state);
 	};
 	fetchVoterData();
 
@@ -76,24 +74,19 @@ const Voting = () => {
 
 		const querySnapshot = await getDocs(q);
 
-		querySnapshot.forEach((doc) => {
+		querySnapshot.docs.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log(doc.id, " => ", doc.data());
+			//console.log( doc.id, " => ", doc.data() );
+			setCandidateDetails((prev) => {
+				return [...prev, doc.data()];
+			});
 		});
-
-		setCandidateDetails(querySnapshot);
 	};
 
-	fetchCandidateData();
-
-	candidateDetails.forEach((candidate) => {
-		console.log(
-			candidate.data().firstname,
-			candidate.data().lastname,
-			" - ",
-			candidate.data().partyname,
-		);
-	});
+	useEffect(() => {
+		fetchCandidateData();
+	}, []);
+	console.log(candidateDetails);
 
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
@@ -131,9 +124,10 @@ const Voting = () => {
 	};
 	const votepaperstyle = {
 		padding: 30,
-		height: "60vh",
+		height: "70vh",
 		width: "120vh",
 		margin: "40px auto",
+		overflow: "auto",
 	};
 	const useStyles = makeStyles((theme) => ({
 		paper: {
@@ -154,7 +148,6 @@ const Voting = () => {
 			maxWidth: "100%",
 			maxHeight: "100%",
 		},
-
 		inline: {
 			display: "inline",
 		},
@@ -171,6 +164,7 @@ const Voting = () => {
 			<Paper elevation={10} style={paperstyle}>
 				<Grid align='center'>
 					<Avatar src='/broken-image.jpg' />
+					<br />
 					<Typography component='h2' variant='h5'>
 						Voter Details
 					</Typography>
@@ -197,41 +191,49 @@ const Voting = () => {
 
 			{/* Displaying the candidate details */}
 			<Paper elevation={10} style={votepaperstyle}>
-				<List>
-					<ListItem alignItems='flex-start'>
-						<ListItemAvatar>
-							<Avatar
-								alt='partyname'
-								src='/static/images/avatar/1.jpg'
-							/>
-						</ListItemAvatar>
-						<ListItemText
-							primary='BJP'
-							secondary={
-								<React.Fragment>
-									<Typography
-										component='span'
-										variant='body2'
-										color='textPrimary'></Typography>
-									{"CANDIDATE1"}
-								</React.Fragment>
-							}
-						/>
-						<br />
-						<br />
-						<Button
-							style={{
-								backgroundColor: "rgb(255, 194, 0)",
-								maxWidth: "50%",
-							}}
-							onClick={(e) => {
-								castVote(e, 3);
-							}}>
-							Vote
-						</Button>
-					</ListItem>
-					<Divider variant='inset' component='li' />
-				</List>
+				{candidateDetails.map((doc) => {
+					return (
+						<List>
+							<ListItem alignItems='flex-start'>
+								<ListItemAvatar>
+									<Avatar
+										style={{
+											background: "rgb(255, 209, 3)",
+										}}
+										alt={doc.partyname}
+										src='/static/images/avatar/1.jpg'
+									/>
+								</ListItemAvatar>
+								<ListItemText
+									primary={doc.partyname}
+									secondary={
+										<React.Fragment>
+											<Typography
+												component='span'
+												variant='body2'
+												color='textPrimary'></Typography>
+											{doc.firstname} {doc.lastname}
+										</React.Fragment>
+									}
+								/>
+								<br />
+								<br />
+								<Button
+									style={{
+										backgroundColor: "rgb(255, 194, 0)",
+										maxWidth: "50%",
+									}}
+									variant='contained'
+									onClick={(e) => {
+										castVote(e, 3);
+									}}>
+									Vote
+								</Button>
+							</ListItem>
+							<Divider variant='inset' component='li' />
+						</List>
+					);
+				})}
 			</Paper>
 		</Grid>
 	);
