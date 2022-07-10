@@ -21,9 +21,9 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
-import { fetchVoterID } from "../web3/Web3";
+/*import { fetchVoterID } from "../web3/Web3";*/
 
-function Copyright(props) {
+const Copyright = (props) => {
 	return (
 		<Typography
 			variant='body2'
@@ -38,11 +38,11 @@ function Copyright(props) {
 			{"."}
 		</Typography>
 	);
-}
+};
 
 const theme = createTheme();
 
-export default function VoterLogin() {
+const VoterLogin = () => {
 	const [voterName, setvoterName] = useState("");
 	const [voterID, setvoterID] = useState("");
 	const [phoneNumber, setphoneNumber] = useState("");
@@ -148,7 +148,7 @@ export default function VoterLogin() {
 					alert("User not verified please retry again");
 					window.location.reload(false);
 				});
-			fetchVoterID(voterID);
+			/*fetchVoterID(voterID);*/
 		}
 	};
 
@@ -251,4 +251,6 @@ export default function VoterLogin() {
 			</Container>
 		</ThemeProvider>
 	);
-}
+};
+
+export default VoterLogin;

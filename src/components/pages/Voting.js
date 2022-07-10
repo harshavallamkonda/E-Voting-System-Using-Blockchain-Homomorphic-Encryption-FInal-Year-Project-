@@ -145,7 +145,7 @@ const Voting = () => {
 		margin: "40px auto",
 		overflow: "auto",
 	};
-	const useStyles = makeStyles((theme) => ({
+	makeStyles((theme) => ({
 		paper: {
 			padding: theme.spacing(1),
 			textAlign: "center",
