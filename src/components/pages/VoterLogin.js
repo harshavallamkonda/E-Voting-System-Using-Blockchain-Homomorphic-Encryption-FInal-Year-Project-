@@ -21,6 +21,7 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
+import { fetchVoterID } from "../web3/Web3";
 
 function Copyright(props) {
 	return (
@@ -60,6 +61,21 @@ export default function VoterLogin() {
 		connectDefault();
 	}, []);
 
+	//Query to check if voter's details exist in the election commission's database
+	const voterExists = async () => {
+		const q = query(
+			collection(db, "voter-details"),
+			where("VoterID", "==", voterID.toString()),
+		);
+		const querySnapshot = await getDoc(q);
+
+		if (querySnapshot.length === 0) {
+			alert("Voter not found");
+		} else {
+			console.log("Voter found, Name: " + querySnapshot.data().Name);
+		}
+	};
+
 	/* For sending OTP after verifyng */
 	const sendOTP = (event) => {
 		if (voterName === "") {
@@ -72,6 +88,10 @@ export default function VoterLogin() {
 			return;
 		}
 
+		if (voterID.length !== 0) {
+			voterExists();
+		}
+		
 		event.preventDefault();
 		window.recaptchaVerifier = new RecaptchaVerifier(
 			"recaptcha-container",
@@ -82,22 +102,7 @@ export default function VoterLogin() {
 			auth,
 		);
 		const appVerifier = window.recaptchaVerifier;
-
-		//Query to check if voter's details exist in the election commission's database
-		const voterExists = async () => {
-			const q = query(
-				collection(db, "voter-details"),
-				where("VoterID", "==", voterID.toString()),
-			);
-			const querySnapshot = await getDoc(q);
-
-			if (querySnapshot.length === 0) {
-				alert("Voter not found");
-			} else {
-				console.log("Voter found, Name: " + querySnapshot.data().Name);
-			}
-		};
-
+		
 		signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 			.then((confirmationResult) => {
 				alert("OTP Sent Successfully!");
@@ -136,6 +141,7 @@ export default function VoterLogin() {
 					alert("User not verified please retry again");
 					window.location.reload(false);
 				});
+			fetchVoterID(voterID);
 		}
 	};
 
