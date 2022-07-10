@@ -106,6 +106,7 @@ const Voting = () => {
 		console.log(voterDocID);
 		fetchVoterData(voterDocID);
 		fetchCandidateData(wardnum);
+		//eslint-disable-next-line
 	}, [voterDocID, wardnum]);
 
 	const castVote = (event, _candidateID) => {
