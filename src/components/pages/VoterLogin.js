@@ -21,6 +21,7 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
+import { fetchVoterID } from "../web3/Web3";
 
 function Copyright(props) {
 	return (
@@ -109,7 +110,6 @@ export default function VoterLogin() {
 			auth,
 		);
 		const appVerifier = window.recaptchaVerifier;
-
 		signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 			.then((confirmationResult) => {
 				alert("OTP Sent Successfully!");
@@ -148,6 +148,7 @@ export default function VoterLogin() {
 					alert("User not verified please retry again");
 					window.location.reload(false);
 				});
+			fetchVoterID(voterID);
 		}
 	};
 

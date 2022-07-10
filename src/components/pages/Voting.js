@@ -20,7 +20,12 @@ import {
 	getDocs,
 } from "../../firebase/config";
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
+let voterID = "";
 
+export const fetchVoterID = (_voterID) => {
+	voterID = _voterID;
+	console.log("voterID", _voterID);
+};
 const Voting = () => {
 	let navigate = useNavigate();
 
@@ -40,8 +45,6 @@ const Voting = () => {
 	const [party, setParty] = useState([]);
 	const [candidateID, setCandidateID] = useState(0);
 	const [voterIndex, setvoterIndex] = useState(0);
-
-	const voterID = "DGU8524763";
 
 	//fetch voter document ID from the database to fetch the voter detais
 	const fetchVoterDocumentID = async () => {
