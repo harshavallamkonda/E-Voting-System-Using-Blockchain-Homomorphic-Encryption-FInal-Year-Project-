@@ -55,13 +55,15 @@ const VoterLogin = () => {
 	let navigate = useNavigate();
 	const routeChange = () => {
 		let path = `/voting`;
-		navigate(path);
+		/* to send the voter ID to the voting page after successful verification of the voter */
+		navigate(path, { state: { voterID: { voterID } } });
 	};
 
 	//Query to check if voter's details exist in the election commission's database
 	const voterExists = async (voterID, voterName, phoneNumber) => {
 		console.log(phoneNumber);
 		const q = query(
+			/* complex query to see if voter with the matching details exists in the election commission's database*/
 			collection(db, "voter-details"),
 			where("VoterID", "==", voterID),
 			where("Name", "==", voterName),
@@ -80,6 +82,7 @@ const VoterLogin = () => {
 	useEffect(() => {
 		voterExists(voterID, voterName, phoneNumber);
 		connectDefault();
+		//eslint-disable-next-line
 	}, [voterID, voterName, phoneNumber, voterDetails.VoterID]);
 
 	/* For sending OTP after verifyng */
@@ -135,6 +138,7 @@ const VoterLogin = () => {
 				.confirm(OTP)
 				.then((result) => {
 					setUser(result.user);
+					console.log("User: ", user);
 					alert("Voter verified successfully");
 
 					if (loadVoterAccount({ voterName }, { voterID }, { phoneNumber })) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { vote } from "../web3/Web3";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Paper, Avatar } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,14 +20,18 @@ import {
 	getDocs,
 } from "../../firebase/config";
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
-let voterID = "";
 
-export const fetchVoterID = (_voterID) => {
-	voterID = _voterID;
-	console.log("voterID", _voterID);
-};
 const Voting = () => {
 	let navigate = useNavigate();
+	const location = useLocation();
+	const voterIDfromVoterLogin = location.state.voterID;
+	console.log(
+		"Voter ID fetched from voting page: ",
+		voterIDfromVoterLogin.voterID,
+	);
+
+	let voterID = voterIDfromVoterLogin.voterID;
+	console.log("Voter ID: ", voterID);
 
 	const handleVoterLogout = () => {
 		navigate(`/voter-sign-in`);
