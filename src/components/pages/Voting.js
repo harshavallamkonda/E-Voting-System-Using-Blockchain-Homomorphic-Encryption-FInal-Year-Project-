@@ -98,8 +98,6 @@ const Voting = () => {
 		fetchVoterDocumentID();
 		console.log(voterDocID);
 		fetchVoterData(voterDocID);
-		console.log(name, constituency, state);
-		console.log(wardnum);
 		fetchCandidateData(wardnum);
 	}, [voterDocID, wardnum]);
 

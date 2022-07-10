@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,7 +15,7 @@ import {
 	collection,
 	db,
 	where,
-	getDoc,
+	getDocs,
 	auth,
 } from "../../firebase/config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
@@ -46,6 +46,7 @@ export default function VoterLogin() {
 	const [voterID, setvoterID] = useState("");
 	const [phoneNumber, setphoneNumber] = useState("");
 	const [OTP, setOTP] = useState("");
+	const [voterDetails, setVoterDetails] = useState([]);
 	const [user, setUser] = useState([]);
 	const [show, setshow] = useState(false);
 
@@ -56,9 +57,29 @@ export default function VoterLogin() {
 		navigate(path);
 	};
 
-	React.useEffect(() => {
+	//Query to check if voter's details exist in the election commission's database
+	const voterExists = async (voterID, voterName, phoneNumber) => {
+		console.log(phoneNumber);
+		const q = query(
+			collection(db, "voter-details"),
+			where("VoterID", "==", voterID),
+			where("Name", "==", voterName),
+			where("Phone", "==", phoneNumber),
+		);
+		const querySnapshot = await getDocs(q);
+
+		querySnapshot.docs.forEach((doc) => {
+			setVoterDetails((prev) => {
+				return [...prev, doc.data()];
+			});
+		});
+		console.log("Voter found: ", voterDetails);
+	};
+
+	useEffect(() => {
+		voterExists(voterID, voterName, phoneNumber);
 		connectDefault();
-	}, []);
+	}, [voterID, voterName, phoneNumber, voterDetails.VoterID]);
 
 	/* For sending OTP after verifyng */
 	const sendOTP = (event) => {
@@ -71,8 +92,14 @@ export default function VoterLogin() {
 		if (phoneNumber === "" || phoneNumber.length < 13) {
 			return;
 		}
-
 		event.preventDefault();
+
+		console.log(voterDetails);
+		if (voterDetails.length === 0) {
+			alert("Voter not found");
+			window.location.reload();
+		}
+
 		window.recaptchaVerifier = new RecaptchaVerifier(
 			"recaptcha-container",
 			{
@@ -82,21 +109,6 @@ export default function VoterLogin() {
 			auth,
 		);
 		const appVerifier = window.recaptchaVerifier;
-
-		//Query to check if voter's details exist in the election commission's database
-		const voterExists = async () => {
-			const q = query(
-				collection(db, "voter-details"),
-				where("VoterID", "==", voterID.toString()),
-			);
-			const querySnapshot = await getDoc(q);
-
-			if (querySnapshot.length === 0) {
-				alert("Voter not found");
-			} else {
-				console.log("Voter found, Name: " + querySnapshot.data().Name);
-			}
-		};
 
 		signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 			.then((confirmationResult) => {
@@ -189,7 +201,7 @@ export default function VoterLogin() {
 							value={phoneNumber}
 							inputProps={{
 								inputmode: "tel",
-								pattern: "[0-9]*",
+								pattern: "+[0-9]*",
 							}}
 							onChange={(e) => {
 								setphoneNumber(e.target.value);
