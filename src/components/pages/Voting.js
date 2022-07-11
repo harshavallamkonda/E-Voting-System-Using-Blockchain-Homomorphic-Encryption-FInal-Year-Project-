@@ -10,6 +10,9 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+
 import {
 	db,
 	doc,
@@ -20,7 +23,17 @@ import {
 	getDocs,
 } from "../../firebase/config";
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
-
+const styles = {
+	position: 'absolute',
+	top: '50%',
+	left: '50%',
+	transform: 'translate(-50%, -50%)',
+	width: 400,
+	bgcolor: 'background.paper',
+	border: '2px solid #000',
+	boxShadow: 24,
+	p: 4,
+  };
 const Voting = () => {
 	let navigate = useNavigate();
 	const location = useLocation();
@@ -109,16 +122,17 @@ const Voting = () => {
 		//eslint-disable-next-line
 	}, [voterDocID, wardnum]);
 
+//Vote button
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
-		setvoterIndex((voterIndex) => voterIndex + 1);
+		/*setvoterIndex((voterIndex) => voterIndex + 1);
 		setCandidateID(_candidateID)(candidateID === 1)
 			? setParty("REP")
 			: candidateID === 2
 			? setParty("DEM")
 			: candidateID === 3
 			? setParty("KW")
-			: alert("There is an error");
+			: alert("There is an error");*/
 
 		window.confirm(
 			"Press 'OK' to vote for Candidate" +
@@ -127,15 +141,20 @@ const Voting = () => {
 				{ party } +
 				"?",
 		);
-
 		try {
 			vote(voterIndex, candidateID);
 			alert("Your vote has successfully been cast");
+
 			navigate(`/`);
 		} catch (error) {
 			alert(" There was an error " + { error });
 		}
 	};
+	const [open, setOpen] = React.useState(false);
+  	const handleOpen = () => setOpen(true);
+  	const handleClose = () => setOpen(false);
+
+	
 
 	const paperstyle = {
 		padding: 30,
@@ -251,17 +270,41 @@ const Voting = () => {
 								/>
 								<br />
 								<br />
+								{/*Vote botton*/}
 								<Button
 									style={{
 										backgroundColor: "rgb(255, 194, 0)",
 										maxWidth: "50%",
 									}}
 									variant='contained'
-									onClick={(e) => {
-										castVote(e, 3);
-									}}>
+									onClick={handleOpen}>
 									Vote
+									
 								</Button>
+								<Modal
+									keepMounted
+									open={open}
+									onClose={handleClose}
+									aria-labelledby="keep-mounted-modal-title"
+									aria-describedby="keep-mounted-modal-description"
+								>
+									<Box sx={styles}>
+									<Typography 
+										id="keep-mounted-modal-title" 
+										variant="h6" 
+										component="h2"
+										align="center">
+										THANKYOU FOR VOTING !!!
+									</Typography>
+									<Button
+										align="center"
+										onClick={(e) => {
+											castVote(e);
+										}}>
+										CONTINUE
+									</Button>
+									</Box>
+								</Modal>
 							</ListItem>
 							<Divider variant='inset' component='li' />
 						</List>
