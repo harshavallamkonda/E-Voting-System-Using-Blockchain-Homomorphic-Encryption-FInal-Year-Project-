@@ -21,7 +21,7 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
-import { fetchVoterID } from "../web3/Web3";
+import { fetchVoterID } from "./Voting";
 
 function Copyright(props) {
 	return (

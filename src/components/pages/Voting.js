@@ -19,7 +19,7 @@ import {
 	collection,
 	getDocs,
 } from "../../firebase/config";
-// import { candidate1 , candidate2, candidate3 } from '../images/Voting';
+import { connectDefault, vote } from "../web3/Web3";
 let voterID = "";
 
 export const fetchVoterID = (_voterID) => {
@@ -98,6 +98,7 @@ const Voting = () => {
 	};
 
 	useEffect(() => {
+		connectDefault();
 		fetchVoterDocumentID();
 		console.log(voterDocID);
 		fetchVoterData(voterDocID);

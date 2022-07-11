@@ -18,17 +18,6 @@ export const connectDefault = async () => {
 }
 
 
-let pollID = null;
-let adminAccount = null;
-
-export const isAdmin = async () => {
-
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    adminAccount = accounts[0];
-    
-}
-
 const loadContract = async () => {
 
 
@@ -87,7 +76,7 @@ export const vote = async (candidateID) => {
 
     }
     else{
-        await election.methods.vote(pollID, candidateID).send( {from: voterAddress} ).on('transactionhash', () => {
+        await election.methods.vote(candidateID).send( {from: voterAddress} ).on('transactionhash', () => {
             console.log('Vote Success')
         })
         window.alert(
@@ -95,44 +84,4 @@ export const vote = async (candidateID) => {
         )
     }
     
-}
-
-export const addPoll = async (pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName) => {
-    const election = await loadContract()
-
-    await election.methods.addPoll(pollID, state, candidateID, candidateName, constituencyID, constituencyName, partyName).send( {from: adminAccount}).on('transactionhash', () => {
-        window.alert(
-        "Poll has been successfully created"
-        )
-    }).catch(error => {
-        window.alert(
-            "Poll couldn't be created, please try again."
-        )
-        console.log(error)
-    })
-    
-}
-
-export const constituencyWinner = async (pollID, candidateID, constituencyID) => {
-
-    const election = await loadContract()
-    const winnerID = await election.methods.constituencyWinner(pollID, candidateID, constituencyID).send({from: adminAccount}).on('transactionhash', () => {
-        console.log("Success declaration of winner")
-    }).catch( (error) => {
-        console.log(error)
-    })
-    return winnerID
-
-}
-
-export const electionWinner = async (pollID) => {
-
-    const election = await loadContract()
-    const winningParty = await election.methods.electionWinner(pollID).send({from: adminAccount}).on('transactionhash', () => {
-        console.log("Success declaration of winner")
-    }).catch( (error) => {
-        console.log(error)
-    })
-    return winningParty
-
 }
