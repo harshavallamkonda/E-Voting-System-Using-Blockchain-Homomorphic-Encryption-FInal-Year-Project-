@@ -132,7 +132,7 @@ const Voting = () => {
 	//Vote button
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
-		
+
 		window.confirm(
 			"Press 'OK' to vote for Candidate" +
 				{ candidateName } +
@@ -286,7 +286,7 @@ const Voting = () => {
 									onClose={handleClose}
 									aria-labelledby='keep-mounted-modal-title'
 									aria-describedby='keep-mounted-modal-description'>
-									<Box sx={styles}>
+									<Box /*sx={styles}*/>
 										<Typography
 											id='keep-mounted-modal-title'
 											variant='h6'
