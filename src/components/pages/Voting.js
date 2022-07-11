@@ -130,31 +130,32 @@ const Voting = () => {
 	}, [voterDocID, wardnum]);
 
 	//Vote button
-	const castVote = (event, _candidateID) => {
+	const castVote = (event,firstname,partyname) => {
 		event.preventDefault();
+		if (window.confirm("Are you sure you want to vote for" + {firstname} + " of " + { partyname } + " ? ")) {
+			// Save it!
+			try {
+				vote(candidateName);
+				alert("Your vote has successfully been cast");
+				/* Updating the voted status of the voter */
+				const votedRef = doc(db, "voter-details", voterDocID);
+				setDoc(votedRef, { Voted: true }, { merge: true });
+	
+				navigate(`/voting-status:completed`);
+			} catch (error) {
+				alert(" There was an error " + { error });
+			}
+			console.log('Voter casted the vote');
+		} else {
+			// Do nothing!
+			console.log('Go back to the voting page ');
+		  }
+		
+		
 
-		window.confirm(
-			"Press 'OK' to vote for Candidate" +
-				{ candidateName } +
-				"of" +
-				{ party } +
-				"?",
-		);
-		try {
-			vote(candidateName);
-			alert("Your vote has successfully been cast");
-			/* Updating the voted status of the voter */
-			const votedRef = doc(db, "voter-details", voterDocID);
-			setDoc(votedRef, { Voted: true }, { merge: true });
-
-			navigate(`/voting-status:completed`);
-		} catch (error) {
-			alert(" There was an error " + { error });
-		}
+		
 	};
-	const [open, setOpen] = React.useState(false);
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
+	
 
 	const paperstyle = {
 		padding: 30,
@@ -277,34 +278,12 @@ const Voting = () => {
 										maxWidth: "50%",
 									}}
 									variant='contained'
-									onClick={handleOpen}>
+									onClick={(e) => {
+											castVote(e,doc.firstname,doc.partyname);
+									}}>
 									Vote
 								</Button>
-								<Modal
-									keepMounted
-									open={open}
-									onClose={handleClose}
-									aria-labelledby='keep-mounted-modal-title'
-									aria-describedby='keep-mounted-modal-description'>
-									<Box /*sx={styles}*/>
-										<Typography
-											id='keep-mounted-modal-title'
-											variant='h6'
-											component='h2'
-											align='center'
-											style={{ radius: "15px" }}>
-											THANKYOU FOR VOTING !!!
-										</Typography>
-										<Button
-											align='center'
-											onClick={(e) => {
-												castVote(e);
-												setCandidateName();
-											}}>
-											CONTINUE
-										</Button>
-									</Box>
-								</Modal>
+								
 							</ListItem>
 							<Divider variant='inset' component='li' />
 						</List>
@@ -316,3 +295,4 @@ const Voting = () => {
 };
 
 export default Voting;
+ 
