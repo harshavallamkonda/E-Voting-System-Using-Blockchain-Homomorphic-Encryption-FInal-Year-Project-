@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import {
 	db,
 	doc,
+	setDoc,
 	getDoc,
 	query,
 	where,
@@ -62,6 +63,21 @@ const Voting = () => {
 	const [party, setParty] = useState("");
 	const [candidateName, setCandidateName] = useState("");
 	const [voterIndex, setvoterIndex] = useState(0);
+
+	//Checking if the voter has already voted
+	const alreadyVoted = async () => {
+		const votedRef = doc(db, "voter-details", voterDocID);
+		const voterVotedStatus = await getDoc(votedRef);
+		console.log(
+			"Voted Status: ",
+			voterVotedStatus.data().Name,
+			"=>",
+			voterVotedStatus.data().Voted,
+		);
+		if (voterVotedStatus.data().Voted === true) {
+			navigate(`/voting-status:completed`);
+		}
+	};
 
 	//fetch voter document ID from the database to fetch the voter detais
 	const fetchVoterDocumentID = async () => {
@@ -117,6 +133,7 @@ const Voting = () => {
 	useEffect(() => {
 		fetchVoterDocumentID();
 		console.log(voterDocID);
+		alreadyVoted();
 		fetchVoterData(voterDocID);
 		fetchCandidateData(wardnum);
 		//eslint-disable-next-line
@@ -144,8 +161,11 @@ const Voting = () => {
 		try {
 			vote(voterIndex, candidateName);
 			alert("Your vote has successfully been cast");
+			/* Updating the voted status of the voter */
+			const votedRef = doc(db, "voter-details", voterDocID);
+			setDoc(votedRef, { Voted: true }, { merge: true });
 
-			navigate(`/`);
+			navigate(`/voting-status:completed`);
 		} catch (error) {
 			alert(" There was an error " + { error });
 		}

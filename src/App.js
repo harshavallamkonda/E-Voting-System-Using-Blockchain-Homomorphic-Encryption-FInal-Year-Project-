@@ -8,6 +8,7 @@ import VoterLogin from "./components/pages/VoterLogin";
 import AdminLogin from "./components/pages/AdminLogin";
 import AdminOptions from "./components/pages/AdminOptions";
 import Voting from "./components/pages/Voting";
+import VotedStatus from "./components/pages/VotedStatus";
 import CreatePoll from "./components/pages/CreatePoll";
 import ConstituencyResult from "./components/pages/ConstituencyResult";
 import ElectionResult from "./components/pages/ElectionResult";
@@ -34,6 +35,11 @@ function App() {
 						path='/admin/election-result'
 						exact
 						element={<ElectionResult />}
+					/>
+					<Route
+						path='/voting-status:completed'
+						exact
+						element={<VotedStatus />}
 					/>
 				</Routes>
 			</Router>

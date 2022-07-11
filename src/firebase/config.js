@@ -14,6 +14,7 @@ import {
 	query,
 	where,
 	getDoc,
+	setDoc,
 	getDocs,
 	onSnapshot,
 } from "firebase/firestore";
@@ -41,6 +42,7 @@ export {
 	query,
 	where,
 	getDoc,
+	setDoc,
 	getDocs,
 	addDoc,
 	signInWithEmailAndPassword,
