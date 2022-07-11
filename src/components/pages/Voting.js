@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { vote } from "../web3/Web3";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Paper, Avatar } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +10,9 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+
 import {
 	db,
 	doc,
@@ -19,6 +22,7 @@ import {
 	collection,
 	getDocs,
 } from "../../firebase/config";
+<<<<<<< HEAD
 import { connectDefault, vote } from "../web3/Web3";
 let voterID = "";
 
@@ -26,8 +30,31 @@ export const fetchVoterID = (_voterID) => {
 	voterID = _voterID;
 	console.log("voterID", _voterID);
 }
+=======
+// import { candidate1 , candidate2, candidate3 } from '../images/Voting';
+const styles = {
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
+	width: 400,
+	bgcolor: "background.paper",
+	border: "2px solid #000",
+	boxShadow: 24,
+	p: 4,
+};
+>>>>>>> a9978906c695e6d26cbbde35ac332f5935b8fb28
 const Voting = () => {
 	let navigate = useNavigate();
+	const location = useLocation();
+	const voterIDfromVoterLogin = location.state.voterID;
+	console.log(
+		"Voter ID fetched from voting page: ",
+		voterIDfromVoterLogin.voterID,
+	);
+
+	let voterID = voterIDfromVoterLogin.voterID;
+	console.log("Voter ID: ", voterID);
 
 	const handleVoterLogout = () => {
 		navigate(`/voter-sign-in`);
@@ -42,8 +69,8 @@ const Voting = () => {
 
 	//candidate details
 	const [candidateDetails, setCandidateDetails] = useState([]);
-	const [party, setParty] = useState([]);
-	const [candidateID, setCandidateID] = useState(0);
+	const [party, setParty] = useState("");
+	const [candidateName, setCandidateName] = useState("");
 	const [voterIndex, setvoterIndex] = useState(0);
 
 	//fetch voter document ID from the database to fetch the voter detais
@@ -102,38 +129,41 @@ const Voting = () => {
 		fetchVoterDocumentID();
 		console.log(voterDocID);
 		fetchVoterData(voterDocID);
-		console.log(name, constituency, state);
-		console.log(wardnum);
 		fetchCandidateData(wardnum);
+		//eslint-disable-next-line
 	}, [voterDocID, wardnum]);
 
+	//Vote button
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
-		setvoterIndex((voterIndex) => voterIndex + 1);
+		/*setvoterIndex((voterIndex) => voterIndex + 1);
 		setCandidateID(_candidateID)(candidateID === 1)
 			? setParty("REP")
 			: candidateID === 2
 			? setParty("DEM")
 			: candidateID === 3
 			? setParty("KW")
-			: alert("There is an error");
+			: alert("There is an error");*/
 
 		window.confirm(
 			"Press 'OK' to vote for Candidate" +
-				{ candidateID } +
+				{ candidateName } +
 				"of" +
 				{ party } +
 				"?",
 		);
-
 		try {
-			vote(voterIndex, candidateID);
+			vote(voterIndex, candidateName);
 			alert("Your vote has successfully been cast");
+
 			navigate(`/`);
 		} catch (error) {
 			alert(" There was an error " + { error });
 		}
 	};
+	const [open, setOpen] = React.useState(false);
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
 
 	const paperstyle = {
 		padding: 30,
@@ -148,7 +178,7 @@ const Voting = () => {
 		margin: "40px auto",
 		overflow: "auto",
 	};
-	const useStyles = makeStyles((theme) => ({
+	makeStyles((theme) => ({
 		paper: {
 			padding: theme.spacing(1),
 			textAlign: "center",
@@ -249,17 +279,41 @@ const Voting = () => {
 								/>
 								<br />
 								<br />
+								{/*Vote botton*/}
 								<Button
 									style={{
 										backgroundColor: "rgb(255, 194, 0)",
 										maxWidth: "50%",
 									}}
 									variant='contained'
-									onClick={(e) => {
-										castVote(e, 3);
-									}}>
+									onClick={handleOpen}>
 									Vote
 								</Button>
+								<Modal
+									keepMounted
+									open={open}
+									onClose={handleClose}
+									aria-labelledby='keep-mounted-modal-title'
+									aria-describedby='keep-mounted-modal-description'>
+									<Box sx={styles}>
+										<Typography
+											id='keep-mounted-modal-title'
+											variant='h6'
+											component='h2'
+											align='center'
+											style={{ radius: "15px" }}>
+											THANKYOU FOR VOTING !!!
+										</Typography>
+										<Button
+											align='center'
+											onClick={(e) => {
+												castVote(e);
+												setCandidateName();
+											}}>
+											CONTINUE
+										</Button>
+									</Box>
+								</Modal>
 							</ListItem>
 							<Divider variant='inset' component='li' />
 						</List>

@@ -28,10 +28,7 @@ function Navbar() {
 		<>
 			<nav className='navbar'>
 				<div className='navbar-container'>
-					<Link
-						to='/'
-						className='navbar-logo'
-						onClick={closeMobileMenu}>
+					<Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
 						VOTE
 						<i class='fab fa-typo3' />
 					</Link>
@@ -40,10 +37,7 @@ function Navbar() {
 					</div>
 					<ul className={click ? "nav-menu active" : "nav-menu"}>
 						<li className='nav-item'>
-							<Link
-								to='/'
-								className='nav-links'
-								onClick={closeMobileMenu}>
+							<Link to='/' className='nav-links' onClick={closeMobileMenu}>
 								Home
 							</Link>
 						</li>
@@ -58,10 +52,7 @@ function Navbar() {
 						</li>
 
 						<li className='nav-item'>
-							<Link
-								to='/admin'
-								className='nav-links'
-								onClick={closeMobileMenu}>
+							<Link to='/admin' className='nav-links' onClick={closeMobileMenu}>
 								Admin
 							</Link>
 						</li>

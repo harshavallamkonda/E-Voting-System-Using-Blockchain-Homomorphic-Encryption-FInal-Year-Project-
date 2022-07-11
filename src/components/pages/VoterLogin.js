@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,15 +15,19 @@ import {
 	collection,
 	db,
 	where,
-	getDoc,
+	getDocs,
 	auth,
 } from "../../firebase/config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { fetchVoterID } from "./Voting";
+=======
+/*import { fetchVoterID } from "../web3/Web3";*/
+>>>>>>> a9978906c695e6d26cbbde35ac332f5935b8fb28
 
-function Copyright(props) {
+const Copyright = (props) => {
 	return (
 		<Typography
 			variant='body2'
@@ -38,15 +42,16 @@ function Copyright(props) {
 			{"."}
 		</Typography>
 	);
-}
+};
 
 const theme = createTheme();
 
-export default function VoterLogin() {
+const VoterLogin = () => {
 	const [voterName, setvoterName] = useState("");
 	const [voterID, setvoterID] = useState("");
 	const [phoneNumber, setphoneNumber] = useState("");
 	const [OTP, setOTP] = useState("");
+	const [voterDetails, setVoterDetails] = useState([]);
 	const [user, setUser] = useState([]);
 	const [show, setshow] = useState(false);
 
@@ -54,27 +59,35 @@ export default function VoterLogin() {
 	let navigate = useNavigate();
 	const routeChange = () => {
 		let path = `/voting`;
-		navigate(path);
+		/* to send the voter ID to the voting page after successful verification of the voter */
+		navigate(path, { state: { voterID: { voterID } } });
 	};
-
-	React.useEffect(() => {
-		connectDefault();
-	}, []);
 
 	//Query to check if voter's details exist in the election commission's database
-	const voterExists = async () => {
+	const voterExists = async (voterID, voterName, phoneNumber) => {
+		console.log(phoneNumber);
 		const q = query(
+			/* complex query to see if voter with the matching details exists in the election commission's database*/
 			collection(db, "voter-details"),
-			where("VoterID", "==", voterID.toString()),
+			where("VoterID", "==", voterID),
+			where("Name", "==", voterName),
+			where("Phone", "==", phoneNumber),
 		);
-		const querySnapshot = await getDoc(q);
+		const querySnapshot = await getDocs(q);
 
-		if (querySnapshot.length === 0) {
-			alert("Voter not found");
-		} else {
-			console.log("Voter found, Name: " + querySnapshot.data().Name);
-		}
+		querySnapshot.docs.forEach((doc) => {
+			setVoterDetails((prev) => {
+				return [...prev, doc.data()];
+			});
+		});
+		console.log("Voter found: ", voterDetails);
 	};
+
+	useEffect(() => {
+		voterExists(voterID, voterName, phoneNumber);
+		connectDefault();
+		//eslint-disable-next-line
+	}, [voterID, voterName, phoneNumber, voterDetails.VoterID]);
 
 	/* For sending OTP after verifyng */
 	const sendOTP = (event) => {
@@ -87,12 +100,14 @@ export default function VoterLogin() {
 		if (phoneNumber === "" || phoneNumber.length < 13) {
 			return;
 		}
-
-		if (voterID.length !== 0) {
-			voterExists();
-		}
-		
 		event.preventDefault();
+
+		console.log(voterDetails);
+		if (voterDetails.length === 0) {
+			alert("Voter not found");
+			window.location.reload();
+		}
+
 		window.recaptchaVerifier = new RecaptchaVerifier(
 			"recaptcha-container",
 			{
@@ -102,7 +117,6 @@ export default function VoterLogin() {
 			auth,
 		);
 		const appVerifier = window.recaptchaVerifier;
-		
 		signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 			.then((confirmationResult) => {
 				alert("OTP Sent Successfully!");
@@ -128,6 +142,7 @@ export default function VoterLogin() {
 				.confirm(OTP)
 				.then((result) => {
 					setUser(result.user);
+					console.log("User: ", user);
 					alert("Voter verified successfully");
 
 					if (loadVoterAccount({ voterName }, { voterID }, { phoneNumber })) {
@@ -141,7 +156,7 @@ export default function VoterLogin() {
 					alert("User not verified please retry again");
 					window.location.reload(false);
 				});
-			fetchVoterID(voterID);
+			/*fetchVoterID(voterID);*/
 		}
 	};
 
@@ -195,7 +210,7 @@ export default function VoterLogin() {
 							value={phoneNumber}
 							inputProps={{
 								inputmode: "tel",
-								pattern: "[0-9]*",
+								pattern: "+[0-9]*",
 							}}
 							onChange={(e) => {
 								setphoneNumber(e.target.value);
@@ -244,4 +259,6 @@ export default function VoterLogin() {
 			</Container>
 		</ThemeProvider>
 	);
-}
+};
+
+export default VoterLogin;
