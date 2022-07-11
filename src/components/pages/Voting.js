@@ -10,8 +10,8 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 
 import {
 	db,
@@ -24,16 +24,16 @@ import {
 } from "../../firebase/config";
 // import { candidate1 , candidate2, candidate3 } from '../images/Voting';
 const styles = {
-	position: 'absolute',
-	top: '50%',
-	left: '50%',
-	transform: 'translate(-50%, -50%)',
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
 	width: 400,
-	bgcolor: 'background.paper',
-	border: '2px solid #000',
+	bgcolor: "background.paper",
+	border: "2px solid #000",
 	boxShadow: 24,
 	p: 4,
-  };
+};
 const Voting = () => {
 	let navigate = useNavigate();
 	const location = useLocation();
@@ -59,8 +59,8 @@ const Voting = () => {
 
 	//candidate details
 	const [candidateDetails, setCandidateDetails] = useState([]);
-	const [party, setParty] = useState([]);
-	const [candidateID, setCandidateID] = useState(0);
+	const [party, setParty] = useState("");
+	const [candidateName, setCandidateName] = useState("");
 	const [voterIndex, setvoterIndex] = useState(0);
 
 	//fetch voter document ID from the database to fetch the voter detais
@@ -122,7 +122,7 @@ const Voting = () => {
 		//eslint-disable-next-line
 	}, [voterDocID, wardnum]);
 
-//Vote button
+	//Vote button
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
 		/*setvoterIndex((voterIndex) => voterIndex + 1);
@@ -136,13 +136,13 @@ const Voting = () => {
 
 		window.confirm(
 			"Press 'OK' to vote for Candidate" +
-				{ candidateID } +
+				{ candidateName } +
 				"of" +
 				{ party } +
 				"?",
 		);
 		try {
-			vote(voterIndex, candidateID);
+			vote(voterIndex, candidateName);
 			alert("Your vote has successfully been cast");
 
 			navigate(`/`);
@@ -151,10 +151,8 @@ const Voting = () => {
 		}
 	};
 	const [open, setOpen] = React.useState(false);
-  	const handleOpen = () => setOpen(true);
-  	const handleClose = () => setOpen(false);
-
-	
+	const handleOpen = () => setOpen(true);
+	const handleClose = () => setOpen(false);
 
 	const paperstyle = {
 		padding: 30,
@@ -279,30 +277,30 @@ const Voting = () => {
 									variant='contained'
 									onClick={handleOpen}>
 									Vote
-									
 								</Button>
 								<Modal
 									keepMounted
 									open={open}
 									onClose={handleClose}
-									aria-labelledby="keep-mounted-modal-title"
-									aria-describedby="keep-mounted-modal-description"
-								>
+									aria-labelledby='keep-mounted-modal-title'
+									aria-describedby='keep-mounted-modal-description'>
 									<Box sx={styles}>
-									<Typography 
-										id="keep-mounted-modal-title" 
-										variant="h6" 
-										component="h2"
-										align="center">
-										THANKYOU FOR VOTING !!!
-									</Typography>
-									<Button
-										align="center"
-										onClick={(e) => {
-											castVote(e);
-										}}>
-										CONTINUE
-									</Button>
+										<Typography
+											id='keep-mounted-modal-title'
+											variant='h6'
+											component='h2'
+											align='center'
+											style={{ radius: "15px" }}>
+											THANKYOU FOR VOTING !!!
+										</Typography>
+										<Button
+											align='center'
+											onClick={(e) => {
+												castVote(e);
+												setCandidateName();
+											}}>
+											CONTINUE
+										</Button>
 									</Box>
 								</Modal>
 							</ListItem>
