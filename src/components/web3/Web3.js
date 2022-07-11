@@ -14,15 +14,6 @@ export const connectDefault = async () => {
 	}
 };
 
-let pollID = null;
-let adminAccount = null;
-
-export const isAdmin = async () => {
-	const web3 = window.web3;
-	const accounts = await web3.eth.getAccounts();
-	adminAccount = accounts[0];
-};
-
 const loadContract = async () => {
 	const web3 = window.web3;
 	const networkID = await web3.eth.net.getId();
@@ -61,7 +52,7 @@ export const loadVoterAccount = async (votername, voterID, phonenumber) => {
 	}
 };
 
-export const vote = async (candidateID) => {
+export const vote = async (candidateName) => {
 	const election = await loadContract();
 	const accounts = await window.web3.eth.getAccounts();
 	const voterAddress = accounts[0];
@@ -76,7 +67,7 @@ export const vote = async (candidateID) => {
 		window.close();
 	} else {
 		await election.methods
-			.vote(pollID, candidateID)
+			.vote(candidateName)
 			.send({ from: voterAddress })
 			.on("transactionhash", () => {
 				console.log("Vote Success");
@@ -85,67 +76,4 @@ export const vote = async (candidateID) => {
 			"Vote has successfully been recorded, you will be redirected to the home page.",
 		);
 	}
-};
-
-export const addPoll = async (
-	pollID,
-	state,
-	candidateID,
-	candidateName,
-	constituencyID,
-	constituencyName,
-	partyName,
-) => {
-	const election = await loadContract();
-
-	await election.methods
-		.addPoll(
-			pollID,
-			state,
-			candidateID,
-			candidateName,
-			constituencyID,
-			constituencyName,
-			partyName,
-		)
-		.send({ from: adminAccount })
-		.on("transactionhash", () => {
-			window.alert("Poll has been successfully created");
-		})
-		.catch((error) => {
-			window.alert("Poll couldn't be created, please try again.");
-			console.log(error);
-		});
-};
-
-export const constituencyWinner = async (
-	pollID,
-	candidateID,
-	constituencyID,
-) => {
-	const election = await loadContract();
-	const winnerID = await election.methods
-		.constituencyWinner(pollID, candidateID, constituencyID)
-		.send({ from: adminAccount })
-		.on("transactionhash", () => {
-			console.log("Success declaration of winner");
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-	return winnerID;
-};
-
-export const electionWinner = async (pollID) => {
-	const election = await loadContract();
-	const winningParty = await election.methods
-		.electionWinner(pollID)
-		.send({ from: adminAccount })
-		.on("transactionhash", () => {
-			console.log("Success declaration of winner");
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-	return winningParty;
 };
