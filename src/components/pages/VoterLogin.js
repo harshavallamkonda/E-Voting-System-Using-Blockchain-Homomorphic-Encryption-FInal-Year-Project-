@@ -21,11 +21,6 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 /* For routing to voting page after successfull verification */
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-import { fetchVoterID } from "./Voting";
-=======
-/*import { fetchVoterID } from "../web3/Web3";*/
->>>>>>> a9978906c695e6d26cbbde35ac332f5935b8fb28
 
 const Copyright = (props) => {
 	return (
@@ -156,7 +151,6 @@ const VoterLogin = () => {
 					alert("User not verified please retry again");
 					window.location.reload(false);
 				});
-			/*fetchVoterID(voterID);*/
 		}
 	};
 

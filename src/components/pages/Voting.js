@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import { vote } from "../web3/Web3";
+import { connectDefault, vote } from "../web3/Web3";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Grid, Paper, Avatar } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
@@ -22,28 +22,7 @@ import {
 	collection,
 	getDocs,
 } from "../../firebase/config";
-<<<<<<< HEAD
-import { connectDefault, vote } from "../web3/Web3";
-let voterID = "";
 
-export const fetchVoterID = (_voterID) => {
-	voterID = _voterID;
-	console.log("voterID", _voterID);
-}
-=======
-// import { candidate1 , candidate2, candidate3 } from '../images/Voting';
-const styles = {
-	position: "absolute",
-	top: "50%",
-	left: "50%",
-	transform: "translate(-50%, -50%)",
-	width: 400,
-	bgcolor: "background.paper",
-	border: "2px solid #000",
-	boxShadow: 24,
-	p: 4,
-};
->>>>>>> a9978906c695e6d26cbbde35ac332f5935b8fb28
 const Voting = () => {
 	let navigate = useNavigate();
 	const location = useLocation();
@@ -136,15 +115,7 @@ const Voting = () => {
 	//Vote button
 	const castVote = (event, _candidateID) => {
 		event.preventDefault();
-		/*setvoterIndex((voterIndex) => voterIndex + 1);
-		setCandidateID(_candidateID)(candidateID === 1)
-			? setParty("REP")
-			: candidateID === 2
-			? setParty("DEM")
-			: candidateID === 3
-			? setParty("KW")
-			: alert("There is an error");*/
-
+		
 		window.confirm(
 			"Press 'OK' to vote for Candidate" +
 				{ candidateName } +
@@ -153,7 +124,7 @@ const Voting = () => {
 				"?",
 		);
 		try {
-			vote(voterIndex, candidateName);
+			vote(candidateName);
 			alert("Your vote has successfully been cast");
 
 			navigate(`/`);
