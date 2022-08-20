@@ -8,3 +8,5 @@ their eligibility status from a federally approved application and then securing
 voter’s data using homomorphic encryption rather than encrypting the vote cast by the 
 voter. By doing this, statistical analysis can be performed on the data which results in a 
 unique set of insights that may otherwise remain unknown.</h5>
+
+<h6 align="center"> Team Members are:</h6>
