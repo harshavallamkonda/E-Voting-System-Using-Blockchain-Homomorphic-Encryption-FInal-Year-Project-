@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ElectionResult() {
-  return (
-    <div>ElectionResult</div>
-  )
+	return <div>ElectionResult</div>;
 }
 
 export default ElectionResult;
